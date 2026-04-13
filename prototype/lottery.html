@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>摇号控制台 - 还房业务平台</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    /* Professional Lottery Console Styles */
+    .lottery-grid {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 24px;
+    }
+
+    .monitor-screen {
+      background: #0f172a;
+      border-radius: 16px;
+      padding: 32px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .monitor-screen::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: scanline 4s linear infinite;
+    }
+
+    @keyframes scanline {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(1000%); }
+    }
+
+    .rolling-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .rolling-name {
+      font-size: 64px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      height: 80px;
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(185, 135, 61, 0.5);
+    }
+
+    .rolling-id {
+      font-size: 24px;
+      opacity: 0.7;
+      font-family: monospace;
+      margin-top: 10px;
+    }
+
+    .round-indicator {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(255,255,255,0.1);
+      padding: 8px 16px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .stats-bar {
+      display: flex;
+      justify-content: space-around;
+      padding: 20px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .stat-item { text-align: center; }
+    .stat-label { font-size: 12px; opacity: 0.6; margin-bottom: 4px; }
+    .stat-val { font-size: 20px; font-weight: 700; }
+
+    .round-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      background: #fff;
+      margin-bottom: 16px;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    .round-card:hover { border-color: var(--accent); }
+    .round-card.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+    .round-card.completed { background: #f8fcf9; }
+    .round-card.disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .round-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .audit-box {
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--muted);
+      background: #fff;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+    }
+
+    /* Winner Modal */
+    .winner-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .winner-modal {
+      background: #fff;
+      width: 90%;
+      max-width: 600px;
+      border-radius: 24px;
+      padding: 40px;
+      text-align: center;
+      animation: modalPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes modalPop {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .winner-list {
+      margin: 24px 0;
+      max-height: 300px;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    .winner-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar"></div>
+  <div class="main">
+    <div class="top-bar"></div>
+    <div class="content">
+      <div id="lock-warning" class="card" style="background: #fdf2f2; border-color: #f8b4b4; text-align: center; padding: 40px;">
+        <div style="font-size: 48px; margin-bottom: 16px;">⚠️</div>
+        <h2 style="color: #9b1c1c; margin-bottom: 8px;">控制台未解锁</h2>
+        <p style="color: #c81e1e; margin-bottom: 24px;">请先在“意愿与审核”页面锁定名单与意愿，方可执行正式摇号。</p>
+        <a href="review.html" class="btn btn-primary">前往意愿与审核</a>
+      </div>
+
+      <div id="lottery-console" style="display: none;">
+        <div class="flex justify-between items-center mb-4">
+          <h2 style="font-size: 24px; font-weight: 700;">摇号控制台</h2>
+          <div class="flex gap-2">
+            <button class="btn btn-secondary" onclick="resetLottery()">重置演示</button>
+            <button class="btn btn-primary" id="run-all-btn" onclick="runAllRounds()">自动执行全部</button>
+          </div>
+        </div>
+
+        <div class="lottery-grid">
+          <!-- Sidebar: Rounds -->
+          <div class="round-sidebar">
+            <div id="rounds-container">
+              <!-- Round Cards -->
+              <div class="round-card" id="card-A" onclick="selectRound('A')">
+                <div class="round-card-header">
+                  <span style="font-weight: 700;">第 A 轮 (120㎡)</span>
+                  <span id="status-A" class="badge badge-warning">待执行</span>
+                </div>
+                <div style="font-size: 12px; color: var(--muted);">参与户数: <span id="pool-A">24</span> | 房源: 4</div>
+              </div>
+
+              <div class="round-card disabled" id="card-B" onclick="selectRound('B')">
+                <div class="round-card-header">
+                  <span style="font-weight: 700;">第 B 轮 (90㎡)</span>
+                  <span id="status-B" class="badge badge-warning">等待中</span>
+                </div>
+                <div style="font-size: 12px; color: var(--muted);">参与户数: <span id="pool-B">--</span> | 房源: 4</div>
+              </div>
+
+              <div class="round-card disabled" id="card-C" onclick="selectRound('C')">
+                <div class="round-card-header">
+                  <span style="font-weight: 700;">第 C 轮 (110㎡)</span>
+                  <span id="status-C" class="badge badge-warning">等待中</span>
+                </div>
+                <div style="font-size: 12px; color: var(--muted);">参与户数: <span id="pool-C">--</span> | 房源: 4</div>
+              </div>
+
+              <div class="round-card disabled" id="card-D" onclick="selectRound('D')">
+                <div class="round-card-header">
+                  <span style="font-weight: 700;">第 D 轮 (80㎡)</span>
+                  <span id="status-D" class="badge badge-warning">等待中</span>
+                </div>
+                <div style="font-size: 12px; color: var(--muted);">参与户数: <span id="pool-D">--</span> | 房源: 4</div>
+              </div>
+            </div>
+
+            <div class="audit-box">
+              <div style="font-weight: 700; margin-bottom: 8px; color: var(--ink);">审计与合规说明</div>
+              <p>算法种子: <span id="seed-val" style="font-family: monospace; color: var(--accent);">LOTTERY_2026_0412</span></p>
+              <p style="margin-top: 8px;">规则: 基于伪随机洗牌算法。每轮仅从当前意愿住户中抽取。中签户立即移除出后续池。</p>
+            </div>
+          </div>
+
+          <!-- Main: Monitor Screen -->
+          <div class="monitor-screen">
+            <div class="round-indicator" id="current-round-display">就绪：请选择轮次</div>
+            
+            <div class="rolling-area">
+              <div id="rolling-box">
+                <div class="rolling-name" id="display-name">---</div>
+                <div class="rolling-id" id="display-id">等待启动...</div>
+              </div>
+              
+              <button class="btn btn-gold" id="start-btn" onclick="startCurrentRound()" style="margin-top: 40px; padding: 16px 48px; font-size: 18px; display: none;">
+                开始摇号
+              </button>
+            </div>
+
+            <div class="stats-bar">
+              <div class="stat-item">
+                <div class="stat-label">参与人数</div>
+                <div class="stat-val" id="stat-participants">--</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">房源总数</div>
+                <div class="stat-val" id="stat-units">--</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">当前进度</div>
+                <div class="stat-val" id="stat-progress">0%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-4" id="results-section" style="display: none;">
+          <div class="card-title">全量中签结果</div>
+          <div class="table-container">
+            <table id="full-results-table">
+              <thead>
+                <tr>
+                  <th>轮次</th>
+                  <th>参与编号</th>
+                  <th>住户姓名</th>
+                  <th>分配房源</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Winner Modal -->
+  <div class="winner-overlay" id="winner-overlay">
+    <div class="winner-modal">
+      <h2 style="color: var(--gold); font-size: 32px; margin-bottom: 8px;">🎉 摇号完成！</h2>
+      <p id="winner-round-title">第 A 轮结果公示</p>
+      <div class="winner-list" id="winner-list">
+        <!-- Winners here -->
+      </div>
+      <button class="btn btn-primary" onclick="closeWinnerModal()">确认结果</button>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    let currentSelectedRound = 'A';
+    let isRolling = false;
+    let rollInterval = null;
+    
+    // Config
+    const ROUND_CONFIG = {
+      'A': { name: 'A 轮 (120㎡)', units: 4, type: 'A型' },
+      'B': { name: 'B 轮 (90㎡)', units: 4, type: 'B型' },
+      'C': { name: 'C 轮 (110㎡)', units: 4, type: 'C型' },
+      'D': { name: 'D 轮 (80㎡)', units: 4, type: 'D型' }
+    };
+
+    function selectRound(rid) {
+      if (isRolling) return;
+      const card = document.getElementById(`card-${rid}`);
+      if (card.classList.contains('disabled')) return;
+
+      currentSelectedRound = rid;
+      
+      // UI Update
+      document.querySelectorAll('.round-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      
+      document.getElementById('current-round-display').textContent = `当前轮次：${ROUND_CONFIG[rid].name}`;
+      document.getElementById('display-name').textContent = '---';
+      document.getElementById('display-id').textContent = '就绪，点击下方按钮开始';
+      document.getElementById('start-btn').style.display = 'inline-flex';
+      
+      updatePoolStats(rid);
+    }
+
+    function updatePoolStats(rid) {
+      const participants = getEligibleParticipants(rid);
+      document.getElementById('stat-participants').textContent = participants.length;
+      document.getElementById('stat-units').textContent = ROUND_CONFIG[rid].units;
+      document.getElementById(`pool-${rid}`).textContent = participants.length;
+    }
+
+    function getEligibleParticipants(rid) {
+      const alreadyWonIds = (PrototypeState.data.lotteryResults || []).map(r => r.householdId);
+      const households = PrototypeState.data.households;
+      const targetType = ROUND_CONFIG[rid].type;
+      
+      // Filter logic: Not won yet AND (this round's type is their current valid wish)
+      // In this demo, we assume:
+      // A-round: households with wish[0] == A型
+      // B-round: households with (wish[0]==B OR (wish[0]==A AND not won))
+      // For demo simplicity, we'll just filter out won people and take people who haven't won.
+      return households.filter(h => !alreadyWonIds.includes(h.householdId));
+    }
+
+    function startCurrentRound() {
+      if (isRolling) return;
+      
+      const participants = getEligibleParticipants(currentSelectedRound);
+      if (participants.length === 0) {
+        alert('当前参与池为空！');
+        return;
+      }
+
+      isRolling = true;
+      document.getElementById('start-btn').style.display = 'none';
+      document.getElementById('run-all-btn').disabled = true;
+
+      // Rolling Animation
+      let counter = 0;
+      rollInterval = setInterval(() => {
+        const randomPerson = participants[Math.floor(Math.random() * participants.length)];
+        document.getElementById('display-name').textContent = randomPerson.name;
+        document.getElementById('display-id').textContent = randomPerson.householdId;
+        counter++;
+        
+        if (counter > 40) { // Roll for ~2 seconds
+          clearInterval(rollInterval);
+          finishRound(currentSelectedRound, participants);
+        }
+      }, 50);
+    }
+
+    function finishRound(rid, pool) {
+      isRolling = false;
+      document.getElementById('run-all-btn').disabled = false;
+      
+      // Calculate Winners (Deterministic for demo)
+      const winnerCount = Math.min(pool.length, ROUND_CONFIG[rid].units);
+      const winners = pool.slice(0, winnerCount).map((p, i) => ({
+        round: rid,
+        householdId: p.householdId,
+        name: p.name,
+        unit: `${rid === 'A' ? '1' : rid === 'B' ? '2' : '3'}-${(i+1)*101}`,
+        time: new Date().toLocaleTimeString()
+      }));
+
+      // Update State
+      PrototypeState.data.roundExecutionState[rid] = true;
+      PrototypeState.data.lotteryResults = [...(PrototypeState.data.lotteryResults || []), ...winners];
+      PrototypeState.save();
+
+      // UI Updates
+      document.getElementById(`status-${rid}`).textContent = '已完成';
+      document.getElementById(`status-${rid}`).className = 'badge badge-success';
+      document.getElementById(`card-${rid}`).classList.add('completed');
+      
+      showWinnerModal(rid, winners);
+      updateGlobalResults();
+      unlockNextRound(rid);
+    }
+
+    function unlockNextRound(rid) {
+      const nextMap = { 'A': 'B', 'B': 'C', 'C': 'D' };
+      const next = nextMap[rid];
+      if (next) {
+        const nextCard = document.getElementById(`card-${next}`);
+        nextCard.classList.remove('disabled');
+        document.getElementById(`status-${next}`).textContent = '待执行';
+        document.getElementById(`status-${next}`).className = 'badge badge-warning';
+      }
+    }
+
+    function showWinnerModal(rid, winners) {
+      const overlay = document.getElementById('winner-overlay');
+      const list = document.getElementById('winner-list');
+      document.getElementById('winner-round-title').textContent = `${ROUND_CONFIG[rid].name} 结果公示`;
+      
+      list.innerHTML = winners.map(w => `
+        <div class="winner-row">
+          <div>
+            <span style="font-weight: 700;">${w.name}</span>
+            <span style="font-size: 12px; color: #666; margin-left: 8px;">${w.householdId}</span>
+          </div>
+          <div style="color: var(--accent); font-weight: 700;">${w.unit}</div>
+        </div>
+      `).join('');
+      
+      overlay.style.display = 'flex';
+    }
+
+    function closeWinnerModal() {
+      document.getElementById('winner-overlay').style.display = 'none';
+      
+      // Auto select next if available
+      const nextMap = { 'A': 'B', 'B': 'C', 'C': 'D' };
+      const next = nextMap[currentSelectedRound];
+      if (next) selectRound(next);
+    }
+
+    function updateGlobalResults() {
+      const results = PrototypeState.data.lotteryResults || [];
+      if (results.length > 0) {
+        document.getElementById('results-section').style.display = 'block';
+        const tbody = document.querySelector('#full-results-table tbody');
+        tbody.innerHTML = results.map(r => `
+          <tr>
+            <td><span class="badge badge-info">${r.round}轮</span></td>
+            <td style="font-family: monospace;">${r.householdId}</td>
+            <td>${r.name}</td>
+            <td style="font-weight: 700;">${r.unit}</td>
+            <td><button class="btn btn-secondary" style="padding: 2px 6px; font-size: 11px;">打印凭证</button></td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    function resetLottery() {
+      if (!confirm('确定要重置所有摇号结果吗？')) return;
+      PrototypeState.data.roundExecutionState = { A: false, B: false, C: false, D: false };
+      PrototypeState.data.lotteryResults = [];
+      PrototypeState.save();
+      location.reload();
+    }
+
+    async function runAllRounds() {
+      const rounds = ['A', 'B', 'C', 'D'];
+      for (const r of rounds) {
+        if (!PrototypeState.data.roundExecutionState[r]) {
+          selectRound(r);
+          await new Promise(res => setTimeout(res, 500));
+          startCurrentRound();
+          // Wait for rolling + modal close
+          await new Promise(res => {
+            const check = setInterval(() => {
+              if (document.getElementById('winner-overlay').style.display === 'none' && !isRolling) {
+                clearInterval(check);
+                res();
+              }
+            }, 500);
+          });
+          await new Promise(res => setTimeout(res, 1000));
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      UI.renderSidebar('lottery');
+      UI.renderTopBar();
+
+      if (PrototypeState.data.lockState) {
+        document.getElementById('lock-warning').style.display = 'none';
+        document.getElementById('lottery-console').style.display = 'block';
+        
+        // Restore State
+        const state = PrototypeState.data.roundExecutionState;
+        const rounds = ['A', 'B', 'C', 'D'];
+        let lastFinished = null;
+
+        rounds.forEach(r => {
+          if (state[r]) {
+            const card = document.getElementById(`card-${r}`);
+            card.classList.remove('disabled');
+            card.classList.add('completed');
+            document.getElementById(`status-${r}`).textContent = '已完成';
+            document.getElementById(`status-${r}`).className = 'badge badge-success';
+            lastFinished = r;
+          }
+        });
+
+        if (lastFinished) {
+          const nextMap = { 'A': 'B', 'B': 'C', 'C': 'D' };
+          const next = nextMap[lastFinished];
+          if (next) {
+            document.getElementById(`card-${next}`).classList.remove('disabled');
+            document.getElementById(`status-${next}`).textContent = '待执行';
+            document.getElementById(`status-${next}`).className = 'badge badge-warning';
+            selectRound(next);
+          } else {
+            selectRound('D');
+          }
+        } else {
+          selectRound('A');
+        }
+        
+        updateGlobalResults();
+      }
+    });
+  </script>
+</body>
+</html>

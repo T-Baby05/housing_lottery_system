@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>房源管理 - 还房业务平台</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="sidebar"></div>
+  <div class="main">
+    <div class="top-bar"></div>
+    <div class="content">
+      <div class="flex gap-2 mb-4" style="overflow-x: auto; padding-bottom: 8px;">
+        <div class="card" style="margin-bottom: 0; min-width: 160px; padding: 16px;">
+          <div style="font-size: 12px; color: var(--muted);">总房源</div>
+          <div style="font-size: 20px; font-weight: 700;">16 套</div>
+        </div>
+        <div class="card" style="margin-bottom: 0; min-width: 160px; padding: 16px;">
+          <div style="font-size: 12px; color: var(--muted);">A型 (120㎡)</div>
+          <div style="font-size: 20px; font-weight: 700;">4 套</div>
+        </div>
+        <div class="card" style="margin-bottom: 0; min-width: 160px; padding: 16px;">
+          <div style="font-size: 12px; color: var(--muted);">B型 (90㎡)</div>
+          <div style="font-size: 20px; font-weight: 700;">4 套</div>
+        </div>
+        <div class="card" style="margin-bottom: 0; min-width: 160px; padding: 16px;">
+          <div style="font-size: 12px; color: var(--muted);">C型 (110㎡)</div>
+          <div style="font-size: 20px; font-weight: 700;">4 套</div>
+        </div>
+        <div class="card" style="margin-bottom: 0; min-width: 160px; padding: 16px;">
+          <div style="font-size: 12px; color: var(--muted);">D型 (80㎡)</div>
+          <div style="font-size: 20px; font-weight: 700;">4 套</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>房源台账管理</span>
+          <div class="flex gap-2">
+            <button class="btn btn-secondary">批量导入</button>
+            <button class="btn btn-primary">新增房源</button>
+          </div>
+        </div>
+        
+        <div class="flex justify-between mb-4">
+          <div class="flex gap-2">
+            <input type="text" placeholder="搜索楼栋/房号" style="padding: 8px 12px; border: 1px solid var(--line); border-radius: 4px; width: 240px;">
+            <select style="padding: 8px 12px; border: 1px solid var(--line); border-radius: 4px;">
+              <option value="">所有房型</option>
+              <option value="A型">A型 (120㎡)</option>
+              <option value="B型">B型 (90㎡)</option>
+              <option value="C型">C型 (110㎡)</option>
+              <option value="D型">D型 (80㎡)</option>
+            </select>
+            <select style="padding: 8px 12px; border: 1px solid var(--line); border-radius: 4px;">
+              <option value="">所有状态</option>
+              <option value="待分配">待分配</option>
+              <option value="已分配">已分配</option>
+              <option value="锁定">锁定</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table id="unit-table">
+            <thead>
+              <tr>
+                <th>楼栋</th>
+                <th>房号</th>
+                <th>房型</th>
+                <th>面积</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Rows will be rendered here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      UI.renderSidebar('units');
+      UI.renderTopBar();
+
+      const tableBody = document.querySelector('#unit-table tbody');
+      
+      // Generate units for demonstration
+      const units = [];
+      const types = ['A型', 'B型', 'C型', 'D型'];
+      const areas = ['120㎡', '90㎡', '110㎡', '80㎡'];
+
+      for (let i = 1; i <= 4; i++) {
+        types.forEach((type, typeIdx) => {
+          units.push({
+            building: `${i}号楼`,
+            unit: `${i}-${(typeIdx + 1) * 100 + i}`,
+            type: type,
+            area: areas[typeIdx],
+            status: '待分配'
+          });
+        });
+      }
+
+      units.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${u.building}</td>
+          <td style="font-weight: 600;">${u.unit}</td>
+          <td>${u.type}</td>
+          <td>${u.area}</td>
+          <td><span class="badge badge-success">${u.status}</span></td>
+          <td>
+            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;">详情</button>
+            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px; margin-left: 4px;">编辑</button>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    });
+  </script>
+</body>
+</html>

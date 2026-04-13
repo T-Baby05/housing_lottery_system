@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>通知与查询管理 - 还房业务平台</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="sidebar"></div>
+  <div class="main">
+    <div class="top-bar"></div>
+    <div class="content">
+      <div class="card">
+        <div class="card-title">
+          <span>查询入口管理</span>
+          <button id="publish-btn" class="btn btn-primary" onclick="togglePublish()">发布结果至查询页</button>
+        </div>
+        <div style="display: flex; gap: 40px; align-items: flex-start;">
+          <div style="flex: 1;">
+            <p style="font-size: 14px; color: var(--muted); margin-bottom: 20px;">
+              结果发布后，住户可通过微信扫描二维码或点击链接，进入手机端查询页面，凭参与编号和证件后四位查询本人的中签结果。
+            </p>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px dashed var(--line); text-align: center;">
+              <div style="width: 120px; height: 120px; background: #eee; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 12px;">二维码占位</div>
+              <div style="font-size: 12px; color: var(--muted);">项目统一查询二维码</div>
+            </div>
+          </div>
+          <div style="flex: 1; background: var(--paper); padding: 20px; border-radius: 8px; border: 1px solid var(--line);">
+            <div style="font-weight: 700; margin-bottom: 12px;">短信通知预览</div>
+            <div style="font-size: 13px; line-height: 1.6; color: #444;">
+              【还房业务平台】尊敬的{姓名}，{项目名称}摇号活动已圆满结束。您已中签：{房源信息}。请于4月20日前携带证件前往现场办理签约手续。查询详情请点击：http://lottery.xx.gov/q/${currentProjectId}
+            </div>
+            <button class="btn btn-secondary" style="margin-top: 16px; width: 100%;" disabled>执行批量短信发送</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">发布状态追踪</div>
+        <table style="font-size: 13px;">
+          <thead>
+            <tr>
+              <th>渠道</th>
+              <th>状态</th>
+              <th>发布时间</th>
+              <th>覆盖人数</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>手机查询页</td>
+              <td><span id="publish-status" class="badge badge-warning">未发布</span></td>
+              <td id="publish-time">--</td>
+              <td>24 户</td>
+              <td><button class="btn btn-secondary" style="padding: 2px 6px; font-size: 11px;">查看日志</button></td>
+            </tr>
+            <tr>
+              <td>短信通知</td>
+              <td><span class="badge badge-warning">未发送</span></td>
+              <td>--</td>
+              <td>0 户</td>
+              <td>--</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    function togglePublish() {
+      if (!PrototypeState.data.roundExecutionState.D) {
+        alert('请先完成所有轮次摇号再发布结果！');
+        return;
+      }
+      PrototypeState.data.publishedState = !PrototypeState.data.publishedState;
+      PrototypeState.save();
+      location.reload();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      UI.renderSidebar('notifications');
+      UI.renderTopBar();
+
+      const isPublished = PrototypeState.data.publishedState;
+      const btn = document.getElementById('publish-btn');
+      const status = document.getElementById('publish-status');
+      const time = document.getElementById('publish-time');
+
+      if (isPublished) {
+        btn.textContent = '撤回发布';
+        btn.className = 'btn btn-secondary';
+        status.textContent = '已发布';
+        status.className = 'badge badge-success';
+        time.textContent = '2026-04-12 11:45';
+      }
+    });
+  </script>
+</body>
+</html>

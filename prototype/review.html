@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>意愿与审核 - 还房业务平台</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="sidebar"></div>
+  <div class="main">
+    <div class="top-bar"></div>
+    <div class="content">
+      <div class="card" id="lock-banner" style="background: var(--gold-soft); border-color: var(--gold); display: none;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 24px;">🔒</span>
+            <div>
+              <div style="font-weight: 700; color: var(--gold);">名单已锁定</div>
+              <div style="font-size: 13px; opacity: 0.8;">当前项目名单与意愿已锁定，不可修改。已解锁摇号控制台。</div>
+            </div>
+          </div>
+          <button class="btn btn-secondary" onclick="toggleLock()">解锁(演示用)</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>意愿采集与资格审核</span>
+          <button class="btn btn-gold" id="lock-btn" onclick="toggleLock()">锁定名单与意愿</button>
+        </div>
+        
+        <div class="table-container">
+          <table id="review-table">
+            <thead>
+              <tr>
+                <th>参与编号</th>
+                <th>姓名</th>
+                <th>第一志愿</th>
+                <th>第二志愿</th>
+                <th>第三志愿</th>
+                <th>第四志愿</th>
+                <th>审核状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Rows will be rendered here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    function toggleLock() {
+      PrototypeState.data.lockState = !PrototypeState.data.lockState;
+      PrototypeState.save();
+      location.reload();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      UI.renderSidebar('review');
+      UI.renderTopBar();
+
+      const isLocked = PrototypeState.data.lockState;
+      const lockBanner = document.getElementById('lock-banner');
+      const lockBtn = document.getElementById('lock-btn');
+      
+      if (isLocked) {
+        lockBanner.style.display = 'block';
+        lockBtn.style.display = 'none';
+      }
+
+      const tableBody = document.querySelector('#review-table tbody');
+      const households = PrototypeState.data.households;
+      const types = ['A型', 'B型', 'C型', 'D型'];
+
+      households.forEach(h => {
+        const tr = document.createElement('tr');
+        const statusClass = h.status === '已审核' ? 'badge-success' : 'badge-danger';
+        
+        // Randomly shuffle types for wishes demo
+        const wishes = [...types].sort(() => Math.random() - 0.5);
+
+        tr.innerHTML = `
+          <td style="font-family: monospace;">${h.householdId}</td>
+          <td>${h.name}</td>
+          <td><span style="font-weight: 600;">${wishes[0]}</span></td>
+          <td style="color: var(--muted);">${wishes[1]}</td>
+          <td style="color: var(--muted);">${wishes[2]}</td>
+          <td style="color: var(--muted);">${wishes[3]}</td>
+          <td><span class="badge ${statusClass}">${h.status}</span></td>
+          <td>
+            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" ${isLocked ? 'disabled' : ''}>审核</button>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    });
+  </script>
+</body>
+</html>

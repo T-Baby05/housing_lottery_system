@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>住户管理 - 还房业务平台</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="sidebar"></div>
+  <div class="main">
+    <div class="top-bar"></div>
+    <div class="content">
+      <div class="card">
+        <div class="card-title">
+          <span>住户台账管理</span>
+          <div class="flex gap-2">
+            <button class="btn btn-secondary">导入数据</button>
+            <button class="btn btn-primary">新增住户</button>
+          </div>
+        </div>
+        
+        <div class="flex justify-between mb-4">
+          <div class="flex gap-2">
+            <input type="text" placeholder="搜索姓名/参与编号" style="padding: 8px 12px; border: 1px solid var(--line); border-radius: 4px; width: 240px;">
+            <select style="padding: 8px 12px; border: 1px solid var(--line); border-radius: 4px;">
+              <option value="">所有资格状态</option>
+              <option value="已审核">已审核</option>
+              <option value="待审核">待审核</option>
+              <option value="异常">异常</option>
+            </select>
+          </div>
+          <div style="font-size: 14px; color: var(--muted);">
+            共 <span id="household-count" style="font-weight: 600; color: var(--ink);">0</span> 户
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table id="household-table">
+            <thead>
+              <tr>
+                <th>参与编号</th>
+                <th>住户姓名</th>
+                <th>身份证后4位</th>
+                <th>住户类别</th>
+                <th>家庭人口</th>
+                <th>代理人</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Rows will be rendered here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      UI.renderSidebar('households');
+      UI.renderTopBar();
+
+      const tableBody = document.querySelector('#household-table tbody');
+      const countSpan = document.getElementById('household-count');
+      const households = PrototypeState.data.households;
+
+      countSpan.textContent = households.length;
+
+      households.forEach(h => {
+        const tr = document.createElement('tr');
+        const statusClass = h.status === '已审核' ? 'badge-success' : (h.status === '异常' ? 'badge-danger' : 'badge-warning');
+        
+        tr.innerHTML = `
+          <td style="font-family: monospace; font-weight: 600;">${h.householdId}</td>
+          <td>${h.name}</td>
+          <td>${h.idLast4}</td>
+          <td>${h.category}</td>
+          <td>${h.members}</td>
+          <td>${h.proxy}</td>
+          <td><span class="badge ${statusClass}">${h.status}</span></td>
+          <td>
+            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;">详情</button>
+            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px; margin-left: 4px;">编辑</button>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>现场服务 - 还房业务平台</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="sidebar"></div>
+  <div class="main">
+    <div class="top-bar"></div>
+    <div class="content">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <!-- Check-in Section -->
+        <div class="card">
+          <div class="card-title">现场签到核验</div>
+          <div style="margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px;">
+              <input type="text" placeholder="扫描二维码或输入参与编号" style="flex: 1; padding: 12px; border: 1px solid var(--line); border-radius: 4px; font-size: 16px;">
+              <button class="btn btn-primary">确认签到</button>
+            </div>
+          </div>
+          <div style="font-size: 14px; border-top: 1px solid var(--line); padding-top: 16px;">
+            <div class="flex justify-between mb-2">
+              <span>今日应到:</span>
+              <span style="font-weight: 700;">24 户</span>
+            </div>
+            <div class="flex justify-between mb-2">
+              <span>已签到:</span>
+              <span style="font-weight: 700; color: var(--accent);">18 户</span>
+            </div>
+            <div class="flex justify-between">
+              <span>签到率:</span>
+              <span style="font-weight: 700; color: var(--accent);">75%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Query Section -->
+        <div class="card">
+          <div class="card-title">快速查号与打印</div>
+          <div style="margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px;">
+              <input type="text" placeholder="输入姓名查询结果" style="flex: 1; padding: 12px; border: 1px solid var(--line); border-radius: 4px; font-size: 16px;">
+              <button class="btn btn-secondary">查询</button>
+            </div>
+          </div>
+          <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; border: 1px solid var(--line); min-height: 100px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 13px;">
+            输入姓名后在此展示中签详情并可点击打印
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>异常情况登记</span>
+          <button class="btn btn-secondary" style="font-size: 12px;">查看所有记录</button>
+        </div>
+        <div class="table-container">
+          <table style="font-size: 13px;">
+            <thead>
+              <tr>
+                <th>时间</th>
+                <th>涉及住户</th>
+                <th>异常类型</th>
+                <th>处理状态</th>
+                <th>操作人</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>10:15</td>
+                <td>张三 (20260001)</td>
+                <td>身份信息校验失败</td>
+                <td><span class="badge badge-warning">处理中</span></td>
+                <td>王专员</td>
+                <td><button class="btn btn-secondary" style="padding: 2px 6px; font-size: 11px;">处理</button></td>
+              </tr>
+              <tr>
+                <td>09:45</td>
+                <td>李四 (20260002)</td>
+                <td>代理人授权缺失</td>
+                <td><span class="badge badge-success">已解决</span></td>
+                <td>李专员</td>
+                <td><button class="btn btn-secondary" style="padding: 2px 6px; font-size: 11px;">查看</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      UI.renderSidebar('onsite');
+      UI.renderTopBar();
+    });
+  </script>
+</body>
+</html>

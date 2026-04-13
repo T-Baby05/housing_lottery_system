@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>结果与归档 - 还房业务平台</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="sidebar"></div>
+  <div class="main">
+    <div class="top-bar"></div>
+    <div class="content">
+      <div class="card">
+        <div class="card-title">
+          <span>最终摇号结果公示表</span>
+          <div class="flex gap-2">
+            <button class="btn btn-secondary">导出 Excel</button>
+            <button class="btn btn-secondary">导出 PDF 盖章版</button>
+          </div>
+        </div>
+        
+        <div class="table-container">
+          <table id="final-results-table">
+            <thead>
+              <tr>
+                <th>中签顺序</th>
+                <th>参与编号</th>
+                <th>住户姓名</th>
+                <th>中签房源</th>
+                <th>中签轮次</th>
+                <th>房型</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Results will be rendered here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+        <div class="card">
+          <div class="card-title">候补顺序名单</div>
+          <table style="font-size: 13px;">
+            <thead>
+              <tr>
+                <th>候补顺序</th>
+                <th>参与编号</th>
+                <th>住户姓名</th>
+                <th>意愿房型</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>001</td><td>20260012</td><td>王五</td><td>A型</td></tr>
+              <tr><td>002</td><td>20260015</td><td>赵六</td><td>B型</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card" style="border-color: #f8b4b4; background: #fff5f5;">
+          <div class="card-title" style="color: #9b1c1c;">项目归档控制</div>
+          <p style="font-size: 13px; color: #c81e1e; margin-bottom: 20px;">
+            归档后，该项目的所有数据将转为只读状态，不可撤回发布或重新摇号。请确保所有线下签约工作已完成。
+          </p>
+          <button class="btn btn-primary" style="background: #c81e1e; width: 100%;" onclick="archiveProject()" id="archive-btn">立即执行归档</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    function archiveProject() {
+      if (!confirm('确认归档项目？归档后将不可修改数据。')) return;
+      PrototypeState.data.archivedState = true;
+      PrototypeState.data.projects.find(p => p.id === PrototypeState.data.currentProjectId).status = '已归档';
+      PrototypeState.save();
+      location.reload();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      UI.renderSidebar('archive');
+      UI.renderTopBar();
+
+      const results = PrototypeState.data.lotteryResults || [];
+      const tbody = document.querySelector('#final-results-table tbody');
+      const isArchived = PrototypeState.data.archivedState;
+
+      if (isArchived) {
+        const btn = document.getElementById('archive-btn');
+        btn.textContent = '项目已归档';
+        btn.disabled = true;
+        btn.style.background = '#ccc';
+      }
+
+      if (results.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--muted);">暂无摇号结果，请先执行摇号。</td></tr>';
+      } else {
+        tbody.innerHTML = results.map((r, i) => `
+          <tr>
+            <td>${(i + 1).toString().padStart(3, '0')}</td>
+            <td style="font-family: monospace;">${r.householdId}</td>
+            <td>${r.name}</td>
+            <td style="font-weight: 700;">${r.unit}</td>
+            <td>${r.round}轮</td>
+            <td>${r.unit.startsWith('1') ? 'A型' : 'B型'}</td>
+            <td><span class="badge badge-success">已中签</span></td>
+          </tr>
+        `).join('');
+      }
+    });
+  </script>
+</body>
+</html>

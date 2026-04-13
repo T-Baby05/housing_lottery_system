@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XX项目还房活动阶段安排</title>
+  <style>
+    :root {
+      --bg: #f4efe6;
+      --paper: rgba(255, 251, 245, 0.92);
+      --ink: #213547;
+      --muted: #66788a;
+      --line: #d7c7b0;
+      --accent: #0f6d78;
+      --accent-soft: rgba(15, 109, 120, 0.12);
+      --gold: #b9873d;
+      --shadow: 0 18px 40px rgba(58, 46, 28, 0.1);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(185, 135, 61, 0.16), transparent 30%),
+        radial-gradient(circle at top right, rgba(15, 109, 120, 0.18), transparent 26%),
+        linear-gradient(180deg, #f8f3eb 0%, #f2ebdf 100%);
+    }
+
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 32px 18px 56px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(255, 252, 247, 0.96), rgba(249, 241, 228, 0.94));
+      border: 1px solid rgba(185, 135, 61, 0.18);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -40px -52px auto;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(15, 109, 120, 0.18), transparent 70%);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    h1 {
+      margin: 16px 0 10px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.15;
+    }
+
+    .intro {
+      margin: 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .summary-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(33, 53, 71, 0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    .summary-label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .summary-value {
+      display: block;
+      margin-top: 8px;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .legend {
+      margin: 24px 0 0;
+      padding: 14px 16px;
+      border-left: 4px solid var(--gold);
+      background: rgba(255, 255, 255, 0.56);
+      border-radius: 0 18px 18px 0;
+      color: #5f5a52;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .section-title {
+      margin: 34px 0 14px;
+      font-size: 24px;
+      line-height: 1.3;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 18px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 11px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: linear-gradient(180deg, rgba(15, 109, 120, 0.25), rgba(185, 135, 61, 0.55));
+    }
+
+    .stage {
+      position: relative;
+      margin: 0 0 16px 18px;
+      padding: 18px 18px 18px 20px;
+      background: var(--paper);
+      border: 1px solid rgba(33, 53, 71, 0.08);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 24px rgba(58, 46, 28, 0.07);
+    }
+
+    .stage::before {
+      content: "";
+      position: absolute;
+      left: -33px;
+      top: 24px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--gold));
+      box-shadow: 0 0 0 6px rgba(255, 250, 242, 0.95);
+    }
+
+    .stage-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .stage-no {
+      min-width: 48px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .stage-window,
+    .stage-duration {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .stage-window {
+      background: rgba(33, 53, 71, 0.07);
+      color: var(--ink);
+    }
+
+    .stage-duration {
+      background: rgba(185, 135, 61, 0.14);
+      color: #8b6328;
+    }
+
+    .stage h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      line-height: 1.35;
+    }
+
+    .stage p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .meta-block {
+      padding: 14px 14px 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(33, 53, 71, 0.07);
+    }
+
+    .meta-block strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+
+    .meta-block ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #4f6474;
+      line-height: 1.75;
+      font-size: 14px;
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(15, 109, 120, 0.08);
+      color: #375463;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding: 18px 12px 36px;
+      }
+
+      .hero {
+        padding: 22px 16px;
+        border-radius: 22px;
+      }
+
+      .summary,
+      .meta {
+        grid-template-columns: 1fr;
+      }
+
+      .stage {
+        margin-left: 16px;
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .stage::before {
+        left: -29px;
+      }
+
+      .stage h3 {
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <span class="eyebrow">HTML 展示版 · 阶段安排</span>
+      <h1>XX 项目还房活动总体阶段安排</h1>
+      <p class="intro">
+        这份页面把原方案中的“阶段安排”单独抽出来，用更直白的时间表达方式展示。时间不再使用 T-5、T+3 这类写法，统一改为“活动前 / 活动当天 / 活动后”，更方便非项目人员快速理解。
+      </p>
+
+      <div class="summary">
+        <div class="summary-card">
+          <span class="summary-label">建议总周期</span>
+          <span class="summary-value">约 45 - 52 天</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">核心阶段</span>
+          <span class="summary-value">10 个阶段</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">主活动时长</span>
+          <span class="summary-value">1 天完成</span>
+        </div>
+      </div>
+
+      <div class="legend">
+        说明：这里的“活动前 45 - 35 天”表示距离正式摇号活动当天，大约提前 45 天至 35 天启动该阶段；“活动后 1 - 3 天”表示摇号活动结束后的收尾时间窗口。
+      </div>
+    </section>
+
+    <h2 class="section-title">阶段时间线路</h2>
+
+    <section class="timeline" aria-label="还房活动阶段时间线路">
+      <article class="stage">
+        <div class="stage-head">
+          <span class="stage-no">阶段 01</span>
+          <span class="stage-window">活动前 45 - 35 天</span>
+          <span class="stage-duration">约 10 天</span>
+        </div>
+        <h3>项目启动</h3>
+        <p>成立工作专班，明确组织模式、职责分工、总排期和活动目标，正式把还房活动从设想阶段转入执行阶段。</p>
+        <div class="meta">
+          <div class="meta-block">
+            <strong>核心任务</strong>
+            <ul>
+              <li>召开项目启动会</li>
+              <li>明确数据、系统、现场、宣传责任人</li>
+              <li>初步锁定活动日期和总体节奏</li>
+            </ul>
+          </div>
+          <div class="meta-block">
+            <strong>阶段产出</strong>
+            <ul>
+              <li>项目启动纪要</li>
+              <li>任务分工表</li>
+              <li>总体推进计划</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="stage">
+        <div class="stage-head">
+          <span class="stage-no">阶段 02</span>
+          <span class="stage-window">活动前 35 - 25 天</span>
+          <span class="stage-duration">约 10 天</span>
+        </div>
+        <h3>规则与基础数据准备</h3>
+        <p>梳理房源台账、住户底册、房型分类和编号规则，形成后续信息采集和电子摇号使用的统一口径。</p>
+        <div class="meta">
+          <div class="meta-block">
+            <strong>核心任务</strong>
+            <ul>
+              <li>整理 A、B、C、D 房型及房源数量</li>
+              <li>建立还房户基础信息底册</li>
+              <li>形成采集模板和规则初稿</li>
+            </ul>
+          </div>
+          <div class="meta-block">
+            <strong>阶段产出</strong>
+            <ul>
+              <li>房源基础台账</li>
+              <li>住户底册</li>
+              <li>信息采集模板</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="stage">
+        <div class="stage-head">
+          <span class="stage-no">阶段 03</span>
+          <span class="stage-window">活动前 25 - 18 天</span>
+          <span class="stage-duration">约 7 天</span>
+        </div>
+        <h3>还房户信息采集</h3>
+        <p>采集还房户身份信息、联系方式、代理信息和房型意愿，这是整个活动最关键的业务输入阶段。</p>
+        <div class="meta">
+          <div class="meta-block">
+            <strong>核心任务</strong>
+            <ul>
+              <li>组织住户填报信息和房型意愿</li>
+              <li>收集联系方式、证件信息和代理情况</li>
+              <li>梳理采集过程中发现的问题</li>
+            </ul>
+          </div>
+          <div class="meta-block">
+            <strong>阶段产出</strong>
+            <ul>
+              <li>信息采集表</li>
+              <li>房型意愿汇总表</li>
+              <li>问题清单</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="stage">
+        <div class="stage-head">
+          <span class="stage-no">阶段 04</span>
+          <span class="stage-window">活动前 18 - 12 天</span>
+          <span class="stage-duration">约 6 天</span>
+        </div>
+        <h3>审核确认与意愿锁定</h3>
+        <p>对已采集的数据进行资格审核、重复校验和异常修正，并完成住户确认，锁定最终名单和房型意愿。</p>
+        <div class="meta">
+          <div class="meta-block">
+            <strong>核心任务</strong>
+            <ul>
+              <li>审核资格和信息完整性</li>
+              <li>处理重复、缺失和异常数据</li>
+              <li>完成意愿确认和锁定</li>
+            </ul>
+          </div>
+          <div class="meta-block">
+            <strong>阶段产出</strong>
+            <ul>
+              <li>最终参与名单</li>
+              <li>意愿确认清单</li>
+              <li>异常处理记录</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="stage">
+        <div class="stage-head">
+          <span class="stage-no">阶段 05</span>
+          <span class="stage-window">活动前 12 - 9 天</span>
+          <span class="stage-duration">约 3 天</span>
+        </div>
+        <h3>系统导入与校验</h3>
+        <p>将名单、房型意愿和房源数据导入系统，核对编号、轮次池、查询逻辑和结果输出格式，确保摇号前技术数据正确。</p>
+        <div class="meta">
+          <div class="meta-block">
+            <strong>核心任务</strong>
+            <ul>
+              <li>导入住户、房源和意愿数据</li>
+              <li>试跑四轮摇号逻辑</li>
+              <li>校验二维码查询和报表输出</li>
+            </ul>
+          </div>
+          <div class="meta-block">
+            <strong>阶段产出</strong>
+            <ul>
+              <li>系统导入清单</li>
+              <li>校验报告</li>
+              <li>试跑记录</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="stage">
+        <div class="stage-head">
+          <span class="stage-no">阶段 06</span>
+          <span class="stage-window">活动前 9 - 5 天</span>
+          <span class="stage-duration">约 4 天</span>
+        </div>
+        <h3>短信通知与信息公示</h3>
+        <p>正式向参与对象发送活动通知，并同步开展名单范围、公示信息、活动时间地点和注意事项的统一发布。</p>
+        <div class="meta">
+          <div class="meta-block">
+            <strong>核心任务</strong>
+            <ul>
+              <li>发送短信通知</li>
+              <li>发布公告和公示信息</li>
+              <li>告知时间、地点、材料、查询方式</li>
+            </ul>
+          </div>
+          <div class="meta-block">
+            <strong>阶段产出</strong>
+            <ul>
+              <li>短信发送记录</li>
+              <li>公示内容</li>
+              <li>通知留痕资料</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="stage">
+        <div class="stage-head">
+          <span class="stage-no">阶段 07</span>
+          <span class="stage-window">活动前 5 - 1 天</span>
+          <span class="stage-duration">约 4 天</span>
+        </div>
+        <h3>联调彩排与会场准备</h3>
+        <p>在活动前最后一周完成设备联调、全流程彩排、二维码测试、会场布置、人员培训和应急预案检查。</p>
+        <div class="meta">
+          <div class="meta-block">
+            <strong>核心任务</strong>
+            <ul>
+              <li>完成全流程彩排</li>
+              <li>检查网络、电源、大屏、打印和扫码设备</li>
+              <li>开展岗位培训和应急演练</li>
+            </ul>
+          </div>
+          <div class="meta-block">
+            <strong>阶段产出</strong>
+            <ul>
+              <li>彩排记录</li>
+              <li>设备检查表</li>
+              <li>应急预案清单</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="stage">
+        <div class="stage-head">
+          <span class="stage-no">阶段 08</span>
+          <span class="stage-window">活动当天</span>
+          <span class="stage-duration">约 1 天</span>
+        </div>
+        <h3>集中摇号活动</h3>
+        <p>完成签到核验、规则宣讲、数据封存确认、A/B/C/D 四轮摇号、扫码查询、结果汇总和现场异议登记。</p>
+        <div class="meta">
+          <div class="meta-block">
+            <strong>核心任务</strong>
+            <ul>
+              <li>签到入场和规则宣讲</li>
+              <li>完成四轮电子摇号</li>
+              <li>开放二维码查询和现场答疑</li>
+            </ul>
+          </div>
+          <div class="meta-block">
+            <strong>阶段产出</strong>
+            <ul>
+              <li>摇号结果表</li>
+              <li>候补顺序表</li>
+              <li>现场影像和记录资料</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="stage">
+        <div class="stage-head">
+          <span class="stage-no">阶段 09</span>
+          <span class="stage-window">活动后 1 - 3 天</span>
+          <span class="stage-duration">约 3 天</span>
+        </div>
+        <h3>结果公示与异议复核</h3>
+        <p>对摇号结果进行正式公示，受理异议申请并组织复核，形成统一结论，避免问题拖延到后续办理阶段。</p>
+        <div class="meta">
+          <div class="meta-block">
+            <strong>核心任务</strong>
+            <ul>
+              <li>发布正式结果公示</li>
+              <li>受理异议申请</li>
+              <li>完成复核和处理意见</li>
+            </ul>
+          </div>
+          <div class="meta-block">
+            <strong>阶段产出</strong>
+            <ul>
+              <li>结果公示表</li>
+              <li>异议登记表</li>
+              <li>复核结论</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="stage">
+        <div class="stage-head">
+          <span class="stage-no">阶段 10</span>
+          <span class="stage-window">活动后 3 - 7 天</span>
+          <span class="stage-duration">约 5 天</span>
+        </div>
+        <h3>确认办理与归档收尾</h3>
+        <p>办理后续确认手续，整理纸质和电子资料，形成活动总结和完整档案，为后续审计、复盘和系统建设提供依据。</p>
+        <div class="meta">
+          <div class="meta-block">
+            <strong>核心任务</strong>
+            <ul>
+              <li>办理后续确认资料</li>
+              <li>汇总纸电档案</li>
+              <li>形成总结报告和归档目录</li>
+            </ul>
+          </div>
+          <div class="meta-block">
+            <strong>阶段产出</strong>
+            <ul>
+              <li>确认办理资料</li>
+              <li>归档目录</li>
+              <li>活动总结</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <div class="footer-note">
+      建议使用方式：这份 HTML 适合作为方案附件、汇报页面或浏览器展示页使用。如果后续你想要，我可以继续把它再改成“更偏领导汇报风”的横向泳道版，或者直接帮你补一个可打印的 A4 版本。
+    </div>
+  </main>
+</body>
+</html>

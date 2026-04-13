@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>项目详情/阶段总览 - 还房业务平台</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .timeline {
+      position: relative;
+      padding: 20px 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--line);
+    }
+    .timeline-item {
+      position: relative;
+      padding-left: 50px;
+      margin-bottom: 30px;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: 10px;
+      top: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      border: 4px solid var(--line);
+      z-index: 1;
+    }
+    .timeline-item.active .timeline-dot {
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+    .timeline-item.completed .timeline-dot {
+      border-color: var(--accent);
+      background: #fff;
+    }
+    .timeline-content {
+      background: #fff;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+    .timeline-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .timeline-date {
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar"></div>
+  <div class="main">
+    <div class="top-bar"></div>
+    <div class="content">
+      <div class="card">
+        <div class="card-title">
+          <span>项目生命周期总览</span>
+          <span class="badge badge-success">进行中</span>
+        </div>
+        <div class="timeline" id="timeline-container">
+          <!-- Timeline items will be rendered here -->
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div class="card">
+          <div class="card-title">关键里程碑</div>
+          <table style="font-size: 13px;">
+            <tr><td style="font-weight: 600;">启动日期</td><td>2026-03-01</td></tr>
+            <tr><td style="font-weight: 600;">数据导入完成</td><td>2026-03-15</td></tr>
+            <tr><td style="font-weight: 600;">意愿采集结束</td><td>2026-04-05</td></tr>
+            <tr><td style="font-weight: 600;">摇号活动日</td><td>2026-04-12</td></tr>
+            <tr><td style="font-weight: 600;">结果公示结束</td><td>2026-04-19</td></tr>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title">活动日概览 (2026-04-12)</div>
+          <div style="font-size: 13px; line-height: 2;">
+            <div>• 08:30 - 09:30 住户签到</div>
+            <div>• 09:30 - 10:00 摇号仪式启动</div>
+            <div>• 10:00 - 11:30 A/B/C/D 四轮摇号执行</div>
+            <div>• 11:30 - 12:00 结果打印与签字确认</div>
+            <div>• 14:00 - 17:00 现场结果查询与答疑</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      UI.renderSidebar('overview');
+      UI.renderTopBar();
+
+      const stages = [
+        { name: '准备阶段', date: '3月1日 - 3月10日', desc: '项目初始化，系统配置，人员培训' },
+        { name: '数据导入', date: '3月11日 - 3月20日', desc: '住户数据、房源数据导入与校验' },
+        { name: '宣传动员', date: '3月21日 - 3月25日', desc: '发放通告，政策宣传' },
+        { name: '意愿采集', date: '3月26日 - 4月5日', desc: '住户填写还房志愿，系统录入' },
+        { name: '资格审核', date: '4月6日 - 4月10日', desc: '审核住户资格，处理异常数据' },
+        { name: '名单锁定', date: '4月11日', desc: '锁定参与摇号的住户与房源名单' },
+        { name: '摇号执行', date: '4月12日', desc: '正式执行 A/B/C/D 四轮摇号' },
+        { name: '结果公示', date: '4月13日 - 4月19日', desc: '发布摇号结果，接受社会监督' },
+        { name: '现场办理', date: '4月20日 - 4月30日', desc: '根据结果办理选房与签约手续' },
+        { name: '归档结项', date: '5月1日', desc: '项目数据备份，系统结项归档' }
+      ];
+
+      const currentStageIdx = 4; // Mock current stage
+      const timeline = document.getElementById('timeline-container');
+      
+      stages.forEach((stage, index) => {
+        const item = document.createElement('div');
+        item.className = `timeline-item ${index === currentStageIdx ? 'active' : (index < currentStageIdx ? 'completed' : '')}`;
+        item.innerHTML = `
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-title">阶段 ${index + 1}: ${stage.name}</div>
+            <div class="timeline-date">${stage.date}</div>
+            <div style="font-size: 13px; margin-top: 8px; color: var(--muted);">${stage.desc}</div>
+          </div>
+        `;
+        timeline.appendChild(item);
+      });
+    });
+  </script>
+</body>
+</html>

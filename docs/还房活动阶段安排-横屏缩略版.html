@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XX项目还房活动阶段安排（横屏缩略版）</title>
+  <style>
+    @page {
+      size: A4 landscape;
+      margin: 10mm;
+    }
+
+    :root {
+      --bg-1: #f7f1e6;
+      --bg-2: #efe5d6;
+      --panel: rgba(255, 251, 245, 0.92);
+      --panel-strong: rgba(255, 248, 239, 0.98);
+      --ink: #233443;
+      --muted: #607381;
+      --line: rgba(35, 52, 67, 0.12);
+      --accent: #0f6a74;
+      --accent-soft: rgba(15, 106, 116, 0.12);
+      --gold: #b98035;
+      --gold-soft: rgba(185, 128, 53, 0.14);
+      --shadow: 0 16px 32px rgba(77, 57, 30, 0.08);
+      --radius-xl: 26px;
+      --radius-lg: 20px;
+      --radius-md: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 18%, rgba(15, 106, 116, 0.14), transparent 20%),
+        radial-gradient(circle at 86% 12%, rgba(185, 128, 53, 0.16), transparent 22%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+    }
+
+    body {
+      padding: 18px;
+    }
+
+    .board {
+      max-width: 1580px;
+      margin: 0 auto;
+      padding: 20px;
+      border-radius: 30px;
+      background: linear-gradient(180deg, rgba(255, 252, 247, 0.86), rgba(251, 245, 236, 0.88));
+      border: 1px solid rgba(185, 128, 53, 0.16);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .board::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(35, 52, 67, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(35, 52, 67, 0.025) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+      z-index: 1;
+    }
+
+    .hero-main,
+    .hero-side {
+      border-radius: var(--radius-xl);
+      padding: 22px 22px 20px;
+      background: var(--panel-strong);
+      border: 1px solid rgba(35, 52, 67, 0.08);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 14px 0 8px;
+      font-size: clamp(28px, 3vw, 42px);
+      line-height: 1.1;
+      letter-spacing: 0.01em;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 920px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(35, 52, 67, 0.06);
+      font-size: 13px;
+      color: var(--ink);
+    }
+
+    .hero-side {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      padding: 14px 14px 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(35, 52, 67, 0.06);
+    }
+
+    .metric span {
+      display: block;
+    }
+
+    .metric .label {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .metric .value {
+      margin-top: 8px;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .metric .note {
+      margin-top: 6px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .bands {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 4fr 3fr 3fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .band {
+      padding: 12px 14px;
+      border-radius: 18px;
+      color: var(--ink);
+      border: 1px solid rgba(35, 52, 67, 0.06);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .band span {
+      display: block;
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: normal;
+    }
+
+    .band.prepare {
+      background: rgba(15, 106, 116, 0.1);
+    }
+
+    .band.sprint {
+      background: rgba(185, 128, 53, 0.12);
+    }
+
+    .band.finish {
+      background: rgba(35, 52, 67, 0.07);
+    }
+
+    .timeline {
+      position: relative;
+      z-index: 1;
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stage {
+      min-height: 214px;
+      padding: 16px 16px 14px;
+      border-radius: var(--radius-lg);
+      background: var(--panel);
+      border: 1px solid rgba(35, 52, 67, 0.07);
+      box-shadow: 0 10px 24px rgba(77, 57, 30, 0.05);
+      position: relative;
+    }
+
+    .stage.complete {
+      background: linear-gradient(180deg, rgba(229, 246, 239, 0.96), rgba(244, 251, 247, 0.96));
+      border-color: rgba(45, 138, 95, 0.24);
+    }
+
+    .stage.focus {
+      background:
+        radial-gradient(circle at top right, rgba(255, 214, 153, 0.38), transparent 28%),
+        linear-gradient(180deg, rgba(255, 241, 224, 0.99), rgba(255, 248, 239, 0.99));
+      border: 2px solid rgba(185, 128, 53, 0.38);
+      box-shadow:
+        0 18px 36px rgba(185, 128, 53, 0.16),
+        0 0 0 4px rgba(255, 224, 182, 0.42);
+      transform: translateY(-4px);
+      overflow: hidden;
+    }
+
+    .stage.optional {
+      background: linear-gradient(180deg, rgba(242, 246, 249, 0.96), rgba(249, 251, 253, 0.96));
+      border-color: rgba(96, 115, 129, 0.18);
+    }
+
+    .stage::after {
+      content: "";
+      position: absolute;
+      top: 22px;
+      right: -10px;
+      width: 20px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(15, 106, 116, 0.5), rgba(185, 128, 53, 0.5));
+    }
+
+    .stage:nth-child(5)::after,
+    .stage:last-child::after {
+      display: none;
+    }
+
+    .stage:nth-child(6)::before {
+      content: "";
+      position: absolute;
+      top: -24px;
+      left: 24px;
+      right: 24px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(15, 106, 116, 0.35), rgba(185, 128, 53, 0.35));
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .stage.focus .tag-row {
+      padding-right: 88px;
+    }
+
+    .no {
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .window {
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(35, 52, 67, 0.06);
+      color: var(--ink);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .duration {
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--gold-soft);
+      color: #8b6328;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .status {
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .complete .status {
+      background: rgba(45, 138, 95, 0.14);
+      color: #25764f;
+    }
+
+    .focus .status {
+      background: linear-gradient(135deg, #b98035, #d59a49);
+      color: #fffaf2;
+      box-shadow: 0 8px 16px rgba(185, 128, 53, 0.2);
+    }
+
+    .optional .status {
+      background: rgba(96, 115, 129, 0.12);
+      color: #566b79;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.25;
+    }
+
+    .stage.focus h2 {
+      color: #7b531b;
+    }
+
+    .desc {
+      margin: 8px 0 0;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--muted);
+      min-height: 64px;
+    }
+
+    .mini-list {
+      margin: 12px 0 0;
+      padding-left: 18px;
+      font-size: 12px;
+      line-height: 1.75;
+      color: #496070;
+    }
+
+    .stage.focus .mini-list {
+      color: #765a2e;
+      font-weight: 600;
+    }
+
+    .focus-flag {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #b93535, #b93535);
+      color: #fffaf3;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      box-shadow: 0 10px 18px rgba(185, 128, 53, 0.24);
+    }
+
+    .legend {
+      position: relative;
+      z-index: 1;
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(35, 52, 67, 0.06);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 12px;
+      align-items: center;
+    }
+
+    .legend-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-right: 4px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .legend-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(35, 52, 67, 0.08);
+    }
+
+    .legend-swatch.complete {
+      background: rgba(45, 138, 95, 0.28);
+    }
+
+    .legend-swatch.focus {
+      background: rgba(185, 128, 53, 0.28);
+    }
+
+    .legend-swatch.optional {
+      background: rgba(96, 115, 129, 0.22);
+    }
+
+    .footer {
+      position: relative;
+      z-index: 1;
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(35, 52, 67, 0.06);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .footer strong {
+      color: var(--ink);
+    }
+
+    @media (max-width: 1280px) {
+      .hero,
+      .bands,
+      .timeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .timeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .stage::after,
+      .stage:nth-child(6)::before {
+        display: none;
+      }
+    }
+
+    @media (max-width: 860px) {
+      body {
+        padding: 10px;
+      }
+
+      .board {
+        padding: 14px;
+        border-radius: 22px;
+      }
+
+      .hero,
+      .hero-side,
+      .bands,
+      .timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="board">
+    <section class="hero">
+      <div class="hero-main">
+        <span class="eyebrow">Landscape One-Page Summary</span>
+        <h1>XX 项目还房活动阶段安排<br />横屏缩略版</h1>
+        <p class="subtitle">
+          面向汇报和快速浏览的单页版本。整体采用“前期准备—活动冲刺—执行收尾”三段式展开，把原来的完整阶段安排压缩为一页横屏摘要，方便会议展示、打印归档和统一口径沟通。
+        </p>
+        <div class="pill-row">
+          <span class="pill">适合投屏汇报</span>
+          <span class="pill">适合 A4 横向打印</span>
+          <span class="pill">适合做方案首页缩略图</span>
+        </div>
+      </div>
+
+      <div class="hero-side">
+        <div class="metric">
+          <span class="label">建议总周期</span>
+          <span class="value">45 - 52 天</span>
+          <span class="note">从项目启动到归档收尾的完整建议周期</span>
+        </div>
+        <div class="metric">
+          <span class="label">阶段数量</span>
+          <span class="value">10 个</span>
+          <span class="note">覆盖启动、采集、导入、通知、活动和收尾</span>
+        </div>
+        <div class="metric">
+          <span class="label">主活动时长</span>
+          <span class="value">1 天</span>
+          <span class="note">正式摇号活动建议在 1 天内完成</span>
+        </div>
+        <div class="metric">
+          <span class="label">关键特征</span>
+          <span class="value">电子摇号</span>
+          <span class="note">支持分轮摇号、扫码查询和结果留痕</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="bands" aria-label="阶段分组">
+      <div class="band prepare">
+        前期准备段
+        <span>阶段 01 - 04，重点解决规则、底册、采集和锁定问题</span>
+      </div>
+      <div class="band sprint">
+        活动冲刺段
+        <span>阶段 05 - 07，重点解决系统、通知、公示和彩排问题</span>
+      </div>
+      <div class="band finish">
+        执行收尾段
+        <span>阶段 08 - 10，重点解决摇号、公示、复核和归档问题</span>
+      </div>
+    </section>
+
+    <section class="legend" aria-label="状态图例">
+      <span class="legend-title">状态说明</span>
+      <span class="legend-item"><span class="legend-swatch complete"></span>阶段 01 - 04：已完成</span>
+      <span class="legend-item"><span class="legend-swatch focus"></span>阶段 05、07、08：重点关注</span>
+      <span class="legend-item"><span class="legend-swatch optional"></span>阶段 06、09、10：可选/常规跟进</span>
+    </section>
+
+    <section class="timeline" aria-label="还房活动横屏缩略时间轴">
+      <article class="stage complete">
+        <div class="tag-row">
+          <span class="no">01</span>
+          <span class="window">活动前 45 - 35 天</span>
+          <span class="duration">约 10 天</span>
+          <span class="status">已完成</span>
+        </div>
+        <h2>项目启动</h2>
+        <p class="desc">成立专班，明确组织模式、分工和总排期，正式进入执行状态。</p>
+        <ul class="mini-list">
+          <li>启动会</li>
+          <li>责任分工</li>
+          <li>总计划</li>
+        </ul>
+      </article>
+
+      <article class="stage complete">
+        <div class="tag-row">
+          <span class="no">02</span>
+          <span class="window">活动前 35 - 25 天</span>
+          <span class="duration">约 10 天</span>
+          <span class="status">已完成</span>
+        </div>
+        <h2>规则与底册准备</h2>
+        <p class="desc">梳理房源台账、房型分类、住户底册和编号口径，形成采集模板。</p>
+        <ul class="mini-list">
+          <li>房源台账</li>
+          <li>住户底册</li>
+          <li>规则初稿</li>
+        </ul>
+      </article>
+
+      <article class="stage complete">
+        <div class="tag-row">
+          <span class="no">03</span>
+          <span class="window">活动前 25 - 18 天</span>
+          <span class="duration">约 7 天</span>
+          <span class="status">已完成</span>
+        </div>
+        <h2>信息与意愿采集</h2>
+        <p class="desc">采集身份信息、联系方式、代理信息和房型意愿，是核心业务输入阶段。</p>
+        <ul class="mini-list">
+          <li>住户填报</li>
+          <li>意愿汇总</li>
+          <li>问题梳理</li>
+        </ul>
+      </article>
+
+      <article class="stage complete">
+        <div class="tag-row">
+          <span class="no">04</span>
+          <span class="window">活动前 18 - 12 天</span>
+          <span class="duration">约 6 天</span>
+          <span class="status">已完成</span>
+        </div>
+        <h2>审核确认与锁定</h2>
+        <p class="desc">完成资格审核、异常修正和确认签字，锁定最终名单及房型意愿。</p>
+        <ul class="mini-list">
+          <li>资格审核</li>
+          <li>异常修正</li>
+          <li>名单锁定</li>
+        </ul>
+      </article>
+
+      <article class="stage focus">
+        <span class="focus-flag">重点</span>
+        <div class="tag-row">
+          <span class="no">05</span>
+          <span class="window">活动前 12 - 9 天</span>
+          <span class="duration">约 3 天</span>
+          <span class="status">重点关注</span>
+        </div>
+        <h2>系统导入与校验</h2>
+        <p class="desc">导入住户、意愿和房源数据，试跑摇号逻辑，校验查询和报表输出。</p>
+        <ul class="mini-list">
+          <li>数据导入</li>
+          <li>试跑校验</li>
+          <li>报表检查</li>
+        </ul>
+      </article>
+
+      <article class="stage optional">
+        <div class="tag-row">
+          <span class="no">06</span>
+          <span class="window">活动前 9 - 5 天</span>
+          <span class="duration">约 4 天</span>
+          <span class="status">可选跟进</span>
+        </div>
+        <h2>短信通知与公示</h2>
+        <p class="desc">发送短信通知，发布活动公告和注意事项，统一对外口径。</p>
+        <ul class="mini-list">
+          <li>短信发送</li>
+          <li>名单公示</li>
+          <li>事项告知</li>
+        </ul>
+      </article>
+
+      <article class="stage focus">
+        <span class="focus-flag">重点</span>
+        <div class="tag-row">
+          <span class="no">07</span>
+          <span class="window">活动前 1 天</span>
+          <span class="duration">约 1 天</span>
+          <span class="status">重点关注</span>
+        </div>
+        <h2>联调彩排与会场准备</h2>
+        <p class="desc">完成设备联调、岗位培训、彩排和会场布置，确保活动当天稳定运行。</p>
+        <ul class="mini-list">
+          <li>彩排演练</li>
+          <li>设备检查</li>
+          <li>应急预案</li>
+        </ul>
+      </article>
+
+      <article class="stage focus">
+        <span class="focus-flag">重点</span>
+        <div class="tag-row">
+          <span class="no">08</span>
+          <span class="window">活动当天</span>
+          <span class="duration">约 1 天</span>
+          <span class="status">重点关注</span>
+        </div>
+        <h2>集中摇号活动</h2>
+        <p class="desc">完成签到、宣讲、数据封存、四轮摇号、扫码查询、结果汇总和异议登记。</p>
+        <ul class="mini-list">
+          <li>四轮摇号</li>
+          <li>扫码查询</li>
+          <li>结果汇总</li>
+        </ul>
+      </article>
+
+      <article class="stage optional">
+        <div class="tag-row">
+          <span class="no">09</span>
+          <span class="window">活动后 1 - 3 天</span>
+          <span class="duration">约 3 天</span>
+          <span class="status">可选跟进</span>
+        </div>
+        <h2>结果公示与复核</h2>
+        <p class="desc">开展正式公示，受理异议申请并组织复核，形成统一结论。</p>
+        <ul class="mini-list">
+          <li>结果公示</li>
+          <li>异议登记</li>
+          <li>复核结论</li>
+        </ul>
+      </article>
+
+      <article class="stage optional">
+        <div class="tag-row">
+          <span class="no">10</span>
+          <span class="window">活动后 3 - 7 天</span>
+          <span class="duration">约 5 天</span>
+          <span class="status">可选跟进</span>
+        </div>
+        <h2>确认办理与归档</h2>
+        <p class="desc">办理后续确认手续，整理纸电资料，形成总结报告和完整档案。</p>
+        <ul class="mini-list">
+          <li>确认办理</li>
+          <li>资料归档</li>
+          <li>活动总结</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="footer">
+      <div><strong>阅读建议：</strong>从左到右、从上到下依次浏览即可，适合作为汇报首页或方案附件的缩略总览。</div>
+      <div><strong>使用场景：</strong>浏览器展示、会议投屏、A4 横向打印、方案封面后的总览页。</div>
+    </section>
+  </main>
+</body>
+</html>

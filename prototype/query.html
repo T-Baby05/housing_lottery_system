@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>住户查询 - 还房业务平台</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    body {
+      background: #f0f2f5;
+      display: block;
+      min-height: 100vh;
+    }
+    .mobile-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .query-header {
+      background: linear-gradient(135deg, var(--accent), var(--gold));
+      color: #fff;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    .query-form {
+      padding: 30px 20px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    .result-card {
+      margin: 20px;
+      padding: 24px;
+      border-radius: 12px;
+      background: var(--paper);
+      border: 1px solid var(--gold);
+      box-shadow: 0 10px 20px rgba(185, 135, 61, 0.1);
+    }
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .result-item:last-child {
+      border-bottom: none;
+    }
+    .result-label {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .result-value {
+      font-weight: 700;
+      color: var(--ink);
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-container">
+    <div class="query-header">
+      <h2 style="margin-bottom: 8px;">还房中签结果查询</h2>
+      <p style="font-size: 13px; opacity: 0.8;" id="project-name">锦绣花园还房项目</p>
+    </div>
+
+    <div id="query-section" class="query-form">
+      <div class="form-group">
+        <label>参与编号</label>
+        <input type="text" id="household-id" placeholder="例如: 20260001">
+      </div>
+      <div class="form-group">
+        <label>身份证后四位</label>
+        <input type="text" id="id-last-4" placeholder="请输入身份证最后4位">
+      </div>
+      <button class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 16px; margin-top: 10px;" onclick="doQuery()">立即查询</button>
+      
+      <div style="margin-top: 40px; text-align: center; font-size: 12px; color: var(--muted);">
+        如有疑问，请咨询现场工作人员或拨打：<br>010-88888888
+      </div>
+    </div>
+
+    <div id="result-section" style="display: none;">
+      <div class="result-card">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div style="font-size: 40px; margin-bottom: 10px;">🎉</div>
+          <h3 style="color: var(--gold);">恭喜您，已中签！</h3>
+        </div>
+        <div class="result-item">
+          <span class="result-label">中签人</span>
+          <span class="result-value" id="res-name">张*</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">中签房源</span>
+          <span class="result-value" id="res-unit" style="font-size: 20px; color: var(--accent);">1-101</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">房型</span>
+          <span class="result-value" id="res-type">120㎡ (A型)</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">中签轮次</span>
+          <span class="result-value" id="res-round">A 轮</span>
+        </div>
+      </div>
+      
+      <div style="padding: 0 20px;">
+        <div style="background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px;">
+          <h4 style="font-size: 14px; margin-bottom: 10px;">后续办理提示：</h4>
+          <ul style="font-size: 13px; color: var(--muted); padding-left: 20px; line-height: 1.8;">
+            <li>请于 2026-04-20 前前往现场指挥部。</li>
+            <li>携带本人有效身份证原件及复印件。</li>
+            <li>代理人需提供书面委托书及代理人身份证。</li>
+          </ul>
+        </div>
+        <button class="btn btn-secondary" style="width: 100%; margin-top: 20px;" onclick="location.reload()">返回重新查询</button>
+      </div>
+    </div>
+
+    <div id="not-published" style="display: none; padding: 60px 20px; text-align: center;">
+      <div style="font-size: 48px; margin-bottom: 20px;">⏳</div>
+      <h3 style="margin-bottom: 12px;">结果尚未发布</h3>
+      <p style="font-size: 14px; color: var(--muted); line-height: 1.6;">
+        当前项目的摇号结果尚未正式发布，请耐心等待通知。发布后您可以通过此页面查询。
+      </p>
+      <button class="btn btn-secondary" style="margin-top: 30px;" onclick="location.reload()">刷新页面</button>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    function doQuery() {
+      const hid = document.getElementById('household-id').value;
+      const last4 = document.getElementById('id-last-4').value;
+
+      if (!hid || !last4) {
+        alert('请输入完整的查询信息');
+        return;
+      }
+
+      const household = PrototypeState.data.households.find(h => h.householdId === hid && h.idLast4 === last4);
+
+      if (!household) {
+        alert('查询失败：未找到对应住户信息或身份校验不通过。');
+        return;
+      }
+
+      const result = (PrototypeState.data.lotteryResults || []).find(r => r.householdId === hid);
+
+      if (!result) {
+        alert('查询提示：您在本次摇号中未中签，请关注候补名单或后续批次。');
+        return;
+      }
+
+      // Show results
+      document.getElementById('query-section').style.display = 'none';
+      document.getElementById('result-section').style.display = 'block';
+      
+      document.getElementById('res-name').textContent = household.name[0] + '*';
+      document.getElementById('res-unit').textContent = result.unit;
+      document.getElementById('res-round').textContent = result.round + ' 轮';
+      document.getElementById('res-type').textContent = result.unit.startsWith('1') ? '120㎡ (A型)' : '90㎡ (B型)';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const project = PrototypeState.getCurrentProject();
+      document.getElementById('project-name').textContent = project.name;
+
+      if (!PrototypeState.data.publishedState) {
+        document.getElementById('query-section').style.display = 'none';
+        document.getElementById('not-published').style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
