@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>住户管理 - 还房业务平台</title>
+  <title>名单管理 - 还房活动一期原型</title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -13,10 +13,33 @@
     <div class="content">
       <div class="card">
         <div class="card-title">
-          <span>住户台账管理</span>
+          <span>活动名单管理</span>
           <div class="flex gap-2">
-            <button class="btn btn-secondary">导入数据</button>
-            <button class="btn btn-primary">新增住户</button>
+            <button class="btn btn-secondary">导入名单</button>
+            <button class="btn btn-primary">导出确认表</button>
+          </div>
+        </div>
+
+        <div style="background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin-bottom: 20px; font-size: 14px; color: var(--muted);">
+          一期只维护活动执行所需的最小名单字段，确保 `参与编号、身份校验、资格状态、代理情况` 清晰可控，为后续名单锁定和摇号执行提供唯一口径。
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px;">
+          <div style="padding: 16px; border: 1px solid var(--line); border-radius: 8px;">
+            <div style="font-size: 12px; color: var(--muted);">有效名单</div>
+            <div id="valid-count" style="font-size: 24px; font-weight: 700; margin-top: 6px;">0</div>
+          </div>
+          <div style="padding: 16px; border: 1px solid var(--line); border-radius: 8px;">
+            <div style="font-size: 12px; color: var(--muted);">异常待核验</div>
+            <div id="pending-count" style="font-size: 24px; font-weight: 700; margin-top: 6px;">0</div>
+          </div>
+          <div style="padding: 16px; border: 1px solid var(--line); border-radius: 8px;">
+            <div style="font-size: 12px; color: var(--muted);">代理参与</div>
+            <div id="proxy-count" style="font-size: 24px; font-weight: 700; margin-top: 6px;">0</div>
+          </div>
+          <div style="padding: 16px; border: 1px solid var(--line); border-radius: 8px;">
+            <div style="font-size: 12px; color: var(--muted);">总户数</div>
+            <div id="household-count-card" style="font-size: 24px; font-weight: 700; margin-top: 6px;">0</div>
           </div>
         </div>
         
@@ -41,11 +64,11 @@
               <tr>
                 <th>参与编号</th>
                 <th>住户姓名</th>
-                <th>身份证后4位</th>
+                <th>身份校验</th>
                 <th>住户类别</th>
                 <th>家庭人口</th>
                 <th>代理人</th>
-                <th>状态</th>
+                <th>资格状态</th>
                 <th>操作</th>
               </tr>
             </thead>
@@ -66,9 +89,17 @@
 
       const tableBody = document.querySelector('#household-table tbody');
       const countSpan = document.getElementById('household-count');
+      const countCard = document.getElementById('household-count-card');
       const households = PrototypeState.data.households;
+      const validCount = households.filter(h => h.status === '已审核').length;
+      const pendingCount = households.filter(h => h.status !== '已审核').length;
+      const proxyCount = households.filter(h => h.proxy && h.proxy !== '无').length;
 
       countSpan.textContent = households.length;
+      countCard.textContent = households.length;
+      document.getElementById('valid-count').textContent = validCount;
+      document.getElementById('pending-count').textContent = pendingCount;
+      document.getElementById('proxy-count').textContent = proxyCount;
 
       households.forEach(h => {
         const tr = document.createElement('tr');
@@ -77,14 +108,14 @@
         tr.innerHTML = `
           <td style="font-family: monospace; font-weight: 600;">${h.householdId}</td>
           <td>${h.name}</td>
-          <td>${h.idLast4}</td>
+          <td>证件后四位 ${h.idLast4}</td>
           <td>${h.category}</td>
           <td>${h.members}</td>
           <td>${h.proxy}</td>
           <td><span class="badge ${statusClass}">${h.status}</span></td>
           <td>
-            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;">详情</button>
-            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px; margin-left: 4px;">编辑</button>
+            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;">查看确认单</button>
+            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px; margin-left: 4px;">标记异常</button>
           </td>
         `;
         tableBody.appendChild(tr);

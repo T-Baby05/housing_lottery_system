@@ -44,6 +44,39 @@ for (let i = 4; i <= 24; i++) {
   });
 }
 
+const ROUND_META = {
+  A: { area: '120㎡', type: 'A型' },
+  B: { area: '90㎡', type: 'B型' },
+  C: { area: '110㎡', type: 'C型' },
+  D: { area: '80㎡', type: 'D型' }
+};
+
+const WISH_PATTERNS = [
+  ['A', 'B', 'C', 'D'],
+  ['B', 'A', 'C', 'D'],
+  ['C', 'D', 'A', 'B'],
+  ['A', 'C', 'D', 'B'],
+  ['D', 'C', 'B', 'A'],
+  ['B', 'D', 'C', 'A']
+];
+
+const CORE_PUBLIC_RULES = [
+  '以户为最小参与单位，每户对应唯一参与编号。',
+  '活动前完成资格审核、名单确认和房型意愿确认，活动当天不再接受普通变更。',
+  '名单、房源、房型意愿和轮次规则在摇号前统一锁定并现场确认。',
+  '摇号按 A / B / C / D 四轮依次进行，已中签住户自动退出后续轮次。',
+  '结果统一通过大屏、公示表和手机查询页同步发布，查询需进行身份校验。'
+];
+
+const CORE_ACTIVITY_FLOW = [
+  { time: '08:00 - 09:00', title: '签到核验', detail: '核验参与编号、身份证件和代理材料。' },
+  { time: '09:00 - 09:20', title: '规则宣讲', detail: '统一说明活动纪律、轮次规则和查询方式。' },
+  { time: '09:20 - 09:30', title: '封存确认', detail: '确认名单、房源、意愿与摇号规则后开始执行。' },
+  { time: '09:30 - 10:50', title: '四轮摇号', detail: '按 A / B / C / D 顺序集中摇号并同步更新结果。' },
+  { time: '10:50 - 11:20', title: '结果汇总', detail: '形成结果表、候补表和现场记录。' },
+  { time: '11:20 - 12:00', title: '查询辅导', detail: '住户扫码查询，现场受理咨询和异常登记。' }
+];
+
 // State Management
 const PrototypeState = {
   data: null,
@@ -84,6 +117,33 @@ const PrototypeState = {
     this.data.currentProjectId = id;
     this.save();
     location.reload();
+  },
+
+  getHouseholdWishes(household) {
+    const source = household.householdId || household.id || '0';
+    const index = parseInt(String(source).replace(/\D/g, '').slice(-2), 10) || 0;
+    const pattern = WISH_PATTERNS[index % WISH_PATTERNS.length];
+    return pattern.map(round => ROUND_META[round].type);
+  },
+
+  getRoundCodeFromType(type) {
+    return Object.keys(ROUND_META).find(round => ROUND_META[round].type === type) || null;
+  },
+
+  getRoundTypeLabel(round) {
+    return ROUND_META[round] ? ROUND_META[round].type : '--';
+  },
+
+  getRoundTypeText(round) {
+    return ROUND_META[round] ? `${ROUND_META[round].area} (${ROUND_META[round].type})` : '--';
+  },
+
+  getPublicRules() {
+    return CORE_PUBLIC_RULES;
+  },
+
+  getActivityFlow() {
+    return CORE_ACTIVITY_FLOW;
   }
 };
 
@@ -94,15 +154,12 @@ const UI = {
     if (!sidebar) return;
 
     const navItems = [
-      { id: 'index', label: '项目工作台', icon: '🏠', path: 'index.html' },
-      { id: 'overview', label: '项目详情/阶段总览', icon: '📊', path: 'project-overview.html' },
-      { id: 'households', label: '住户管理', icon: '👥', path: 'households.html' },
-      { id: 'units', label: '房源管理', icon: '🏢', path: 'units.html' },
-      { id: 'review', label: '意愿与审核', icon: '📋', path: 'review.html' },
-      { id: 'lottery', label: '摇号控制台', icon: '🎲', path: 'lottery.html' },
-      { id: 'notifications', label: '通知与查询管理', icon: '🔔', path: 'notifications.html' },
-      { id: 'onsite', label: '现场服务', icon: '📍', path: 'onsite.html' },
-      { id: 'archive', label: '结果与归档', icon: '📁', path: 'archive.html' }
+      { id: 'index', label: '一期工作台', icon: '🏠', path: 'index.html' },
+      { id: 'households', label: '名单管理', icon: '👥', path: 'households.html' },
+      { id: 'review', label: '名单锁定', icon: '🔒', path: 'review.html' },
+      { id: 'lottery', label: '摇号执行', icon: '🎲', path: 'lottery.html' },
+      { id: 'notifications', label: '公示与查询', icon: '📢', path: 'notifications.html' },
+      { id: 'archive', label: '结果归档', icon: '📁', path: 'archive.html' }
     ];
 
     sidebar.innerHTML = `
@@ -119,6 +176,7 @@ const UI = {
       </div>
       <div class="sidebar-footer">
         <div>当前用户: 管理员</div>
+        <div style="margin-top: 6px;">一期演示聚焦五个动作</div>
         <button onclick="PrototypeState.reset()" style="margin-top: 8px; font-size: 11px; cursor: pointer; background: none; border: 1px solid #ccc; padding: 2px 4px;">重置演示数据</button>
       </div>
     `;

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>结果与归档 - 还房业务平台</title>
+  <title>结果归档 - 还房活动一期原型</title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -13,11 +13,15 @@
     <div class="content">
       <div class="card">
         <div class="card-title">
-          <span>最终摇号结果公示表</span>
+          <span>最终结果公示与归档</span>
           <div class="flex gap-2">
             <button class="btn btn-secondary">导出 Excel</button>
             <button class="btn btn-secondary">导出 PDF 盖章版</button>
           </div>
+        </div>
+
+        <div style="background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin-bottom: 20px; font-size: 14px; color: var(--muted);">
+          一期归档重点不是做复杂档案系统，而是形成 `结果公示表、候补顺序表、导出文件、操作留痕` 四类基础成果，为后续公示、复核和活动复盘提供依据。
         </div>
         
         <div class="table-container">
@@ -40,7 +44,7 @@
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+      <div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 24px;">
         <div class="card">
           <div class="card-title">候补顺序名单</div>
           <table style="font-size: 13px;">
@@ -58,10 +62,20 @@
             </tbody>
           </table>
         </div>
+        <div class="card">
+          <div class="card-title">归档包清单</div>
+          <div style="font-size: 13px; color: var(--muted); line-height: 1.9;">
+            <div>1. 名单锁定确认表</div>
+            <div>2. 规则公示与流程公示版本</div>
+            <div>3. 四轮摇号结果表</div>
+            <div>4. 候补名单与异常登记表</div>
+            <div>5. 查询发布记录与导出文件</div>
+          </div>
+        </div>
         <div class="card" style="border-color: #f8b4b4; background: #fff5f5;">
           <div class="card-title" style="color: #9b1c1c;">项目归档控制</div>
           <p style="font-size: 13px; color: #c81e1e; margin-bottom: 20px;">
-            归档后，该项目的所有数据将转为只读状态，不可撤回发布或重新摇号。请确保所有线下签约工作已完成。
+            归档后，该项目的所有数据将转为只读状态，不可撤回发布或重新摇号。请确保公示、异议登记和后续办理安排已完成。
           </p>
           <button class="btn btn-primary" style="background: #c81e1e; width: 100%;" onclick="archiveProject()" id="archive-btn">立即执行归档</button>
         </div>
@@ -104,7 +118,7 @@
             <td>${r.name}</td>
             <td style="font-weight: 700;">${r.unit}</td>
             <td>${r.round}轮</td>
-            <td>${r.unit.startsWith('1') ? 'A型' : 'B型'}</td>
+            <td>${PrototypeState.getRoundTypeLabel(r.round)}</td>
             <td><span class="badge badge-success">已中签</span></td>
           </tr>
         `).join('');

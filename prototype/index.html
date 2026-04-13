@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>还房业务平台 - 项目工作台</title>
+  <title>还房活动一期工作台</title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -12,48 +12,59 @@
     <div class="top-bar"></div>
     <div class="content">
       <div class="hero-section" style="background: linear-gradient(135deg, var(--accent), var(--gold)); color: #fff; padding: 40px; border-radius: var(--radius); margin-bottom: 24px;">
-        <h1 style="font-size: 32px; margin-bottom: 12px;">欢迎使用还房业务平台</h1>
-        <p style="opacity: 0.9; font-size: 16px;">基于“项目管理”核心逻辑，提供从住户管理到结果发布的全链路还房解决方案。</p>
+        <h1 style="font-size: 32px; margin-bottom: 12px;">还房活动一期核心链路工作台</h1>
+        <p style="opacity: 0.92; font-size: 16px;">一期原型只围绕名单、锁定、摇号、查询、归档五个关键动作展开，同时补充规则公示和活动流程公示，用于客户汇报与活动执行推演。</p>
       </div>
 
       <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 24px;">
         <div class="card" style="margin-bottom: 0; padding: 20px;">
-          <div style="font-size: 14px; color: var(--muted); margin-bottom: 8px;">进行中项目</div>
-          <div style="font-size: 28px; font-weight: 700;">1</div>
+          <div style="font-size: 14px; color: var(--muted); margin-bottom: 8px;">一期范围</div>
+          <div style="font-size: 28px; font-weight: 700;">5</div>
+          <div style="font-size: 12px; color: var(--muted); margin-top: 6px;">核心动作</div>
         </div>
         <div class="card" style="margin-bottom: 0; padding: 20px;">
-          <div style="font-size: 14px; color: var(--muted); margin-bottom: 8px;">已完成归档</div>
+          <div style="font-size: 14px; color: var(--muted); margin-bottom: 8px;">规则公示</div>
           <div style="font-size: 28px; font-weight: 700;">1</div>
+          <div style="font-size: 12px; color: var(--muted); margin-top: 6px;">统一口径</div>
+        </div>
+        <div class="card" style="margin-bottom: 0; padding: 20px;">
+          <div style="font-size: 14px; color: var(--muted); margin-bottom: 8px;">活动流程公示</div>
+          <div style="font-size: 28px; font-weight: 700;">1</div>
+          <div style="font-size: 12px; color: var(--muted); margin-top: 6px;">活动日路径</div>
         </div>
         <div class="card" style="margin-bottom: 0; padding: 20px;">
           <div style="font-size: 14px; color: var(--muted); margin-bottom: 8px;">总涉及住户</div>
           <div style="font-size: 28px; font-weight: 700;">204</div>
-        </div>
-        <div class="card" style="margin-bottom: 0; padding: 20px;">
-          <div style="font-size: 14px; color: var(--muted); margin-bottom: 8px;">待分配房源</div>
-          <div style="font-size: 28px; font-weight: 700;">166</div>
+          <div style="font-size: 12px; color: var(--muted); margin-top: 6px;">演示项目统计</div>
         </div>
       </div>
 
       <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
         <div class="card">
-          <div class="card-title">当前活跃项目概览</div>
+          <div class="card-title">一期演示路径</div>
           <div id="project-list">
             <!-- Project cards will be rendered here -->
           </div>
         </div>
         <div class="card">
-          <div class="card-title">演示操作指南</div>
+          <div class="card-title">客户沟通重点</div>
           <div style="font-size: 14px; line-height: 1.8;">
-            <ol style="padding-left: 20px;">
-              <li><strong>数据准备</strong>: 在“住户管理”和“房源管理”查看导入的数据。</li>
-              <li><strong>审核锁定</strong>: 在“意愿与审核”页面点击“锁定数据”按钮。</li>
-              <li><strong>执行摇号</strong>: 进入“摇号控制台”执行 A/B/C/D 四轮摇号。</li>
-              <li><strong>发布结果</strong>: 在“通知管理”发布结果，启用手机查询。</li>
-              <li><strong>手机模拟</strong>: 访问“住户查询页”模拟手机端查询。</li>
-              <li><strong>归档关闭</strong>: 在“结果与归档”页点击“完成归档”。</li>
-            </ol>
+            <div style="margin-bottom: 10px;"><strong>1. 先讲边界</strong>: 一期只解决活动核心链路，不追求大而全。</div>
+            <div style="margin-bottom: 10px;"><strong>2. 再讲公平</strong>: 通过规则公示、名单锁定、现场确认、结果留痕建立信任。</div>
+            <div style="margin-bottom: 10px;"><strong>3. 再讲效率</strong>: 用四轮集中摇号替代逐户摇珠，结果统一扫码查询。</div>
+            <div><strong>4. 最后讲落地</strong>: 活动后直接形成结果、公示、归档闭环。</div>
           </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">一期交付口径</div>
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;">
+          <a href="households.html" class="btn btn-secondary" style="justify-content: center; padding: 18px 12px; text-decoration: none;">名单管理</a>
+          <a href="review.html" class="btn btn-secondary" style="justify-content: center; padding: 18px 12px; text-decoration: none;">名单锁定</a>
+          <a href="lottery.html" class="btn btn-secondary" style="justify-content: center; padding: 18px 12px; text-decoration: none;">摇号执行</a>
+          <a href="notifications.html" class="btn btn-secondary" style="justify-content: center; padding: 18px 12px; text-decoration: none;">公示与查询</a>
+          <a href="archive.html" class="btn btn-secondary" style="justify-content: center; padding: 18px 12px; text-decoration: none;">结果归档</a>
         </div>
       </div>
     </div>
@@ -69,7 +80,7 @@
       const projectList = document.getElementById('project-list');
       
       projectList.innerHTML = `
-        <div style="border: 1px solid var(--line); border-radius: 8px; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="border: 1px solid var(--line); border-radius: 8px; padding: 20px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
           <div>
             <h3 style="margin-bottom: 8px; font-size: 18px;">${project.name}</h3>
             <div style="font-size: 13px; color: var(--muted); display: flex; gap: 16px;">
@@ -82,7 +93,17 @@
             </div>
             <div style="font-size: 11px; margin-top: 4px; color: var(--accent);">进度: 阶段 ${project.currentStage} / 10</div>
           </div>
-          <a href="project-overview.html" class="btn btn-primary">进入项目管理</a>
+          <a href="households.html" class="btn btn-primary">进入一期链路</a>
+        </div>
+        <div style="border: 1px solid var(--line); border-radius: 8px; padding: 20px; background: var(--paper);">
+          <div style="font-weight: 700; margin-bottom: 12px;">建议汇报顺序</div>
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; font-size: 13px; color: var(--muted);">
+            <div><strong style="display: block; color: var(--ink);">1. 名单</strong>导入与确认</div>
+            <div><strong style="display: block; color: var(--ink);">2. 锁定</strong>冻结口径</div>
+            <div><strong style="display: block; color: var(--ink);">3. 摇号</strong>四轮执行</div>
+            <div><strong style="display: block; color: var(--ink);">4. 查询</strong>规则与结果公示</div>
+            <div><strong style="display: block; color: var(--ink);">5. 归档</strong>结果留痕</div>
+          </div>
         </div>
       `;
     });

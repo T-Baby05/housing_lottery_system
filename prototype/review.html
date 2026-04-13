@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>意愿与审核 - 还房业务平台</title>
+  <title>名单锁定 - 还房活动一期原型</title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -17,7 +17,7 @@
             <span style="font-size: 24px;">🔒</span>
             <div>
               <div style="font-weight: 700; color: var(--gold);">名单已锁定</div>
-              <div style="font-size: 13px; opacity: 0.8;">当前项目名单与意愿已锁定，不可修改。已解锁摇号控制台。</div>
+              <div style="font-size: 13px; opacity: 0.8;">当前项目的有效名单、房型意愿和执行口径已冻结，只允许按异常流程处理。摇号执行入口已开放。</div>
             </div>
           </div>
           <button class="btn btn-secondary" onclick="toggleLock()">解锁(演示用)</button>
@@ -26,8 +26,31 @@
 
       <div class="card">
         <div class="card-title">
-          <span>意愿采集与资格审核</span>
+          <span>名单锁定与封存确认</span>
           <button class="btn btn-gold" id="lock-btn" onclick="toggleLock()">锁定名单与意愿</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px;">
+          <div style="padding: 16px; border: 1px solid var(--line); border-radius: 8px;">
+            <div style="font-size: 12px; color: var(--muted);">名单确认</div>
+            <div style="font-size: 15px; font-weight: 700; margin-top: 6px;">参与编号唯一</div>
+          </div>
+          <div style="padding: 16px; border: 1px solid var(--line); border-radius: 8px;">
+            <div style="font-size: 12px; color: var(--muted);">意愿确认</div>
+            <div style="font-size: 15px; font-weight: 700; margin-top: 6px;">四类房型已核对</div>
+          </div>
+          <div style="padding: 16px; border: 1px solid var(--line); border-radius: 8px;">
+            <div style="font-size: 12px; color: var(--muted);">异常处理</div>
+            <div style="font-size: 15px; font-weight: 700; margin-top: 6px;">活动前全部清理</div>
+          </div>
+          <div style="padding: 16px; border: 1px solid var(--line); border-radius: 8px;">
+            <div style="font-size: 12px; color: var(--muted);">锁定效果</div>
+            <div style="font-size: 15px; font-weight: 700; margin-top: 6px;">形成唯一执行口径</div>
+          </div>
+        </div>
+
+        <div style="background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin-bottom: 20px; font-size: 14px; color: var(--muted);">
+          `数据封存` 在本原型中表示：对活动参与名单、房型意愿、房源数量和轮次规则做最终确认并转为只读。客户沟通时，这一步就是电子摇号替代传统摇珠的关键控制点。
         </div>
         
         <div class="table-container">
@@ -76,14 +99,11 @@
 
       const tableBody = document.querySelector('#review-table tbody');
       const households = PrototypeState.data.households;
-      const types = ['A型', 'B型', 'C型', 'D型'];
 
       households.forEach(h => {
         const tr = document.createElement('tr');
         const statusClass = h.status === '已审核' ? 'badge-success' : 'badge-danger';
-        
-        // Randomly shuffle types for wishes demo
-        const wishes = [...types].sort(() => Math.random() - 0.5);
+        const wishes = PrototypeState.getHouseholdWishes(h);
 
         tr.innerHTML = `
           <td style="font-family: monospace;">${h.householdId}</td>
@@ -94,7 +114,7 @@
           <td style="color: var(--muted);">${wishes[3]}</td>
           <td><span class="badge ${statusClass}">${h.status}</span></td>
           <td>
-            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" ${isLocked ? 'disabled' : ''}>审核</button>
+            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" ${isLocked ? 'disabled' : ''}>查看确认单</button>
           </td>
         `;
         tableBody.appendChild(tr);

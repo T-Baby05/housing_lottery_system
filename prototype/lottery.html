@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>摇号控制台 - 还房业务平台</title>
+  <title>摇号执行 - 还房活动一期原型</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
     /* Professional Lottery Console Styles */
@@ -171,16 +171,23 @@
       <div id="lock-warning" class="card" style="background: #fdf2f2; border-color: #f8b4b4; text-align: center; padding: 40px;">
         <div style="font-size: 48px; margin-bottom: 16px;">⚠️</div>
         <h2 style="color: #9b1c1c; margin-bottom: 8px;">控制台未解锁</h2>
-        <p style="color: #c81e1e; margin-bottom: 24px;">请先在“意愿与审核”页面锁定名单与意愿，方可执行正式摇号。</p>
-        <a href="review.html" class="btn btn-primary">前往意愿与审核</a>
+        <p style="color: #c81e1e; margin-bottom: 24px;">请先在“名单锁定”页面完成名单与意愿封存，方可执行正式摇号。</p>
+        <a href="review.html" class="btn btn-primary">前往名单锁定</a>
       </div>
 
       <div id="lottery-console" style="display: none;">
         <div class="flex justify-between items-center mb-4">
-          <h2 style="font-size: 24px; font-weight: 700;">摇号控制台</h2>
+          <h2 style="font-size: 24px; font-weight: 700;">摇号执行控制台</h2>
           <div class="flex gap-2">
             <button class="btn btn-secondary" onclick="resetLottery()">重置演示</button>
             <button class="btn btn-primary" id="run-all-btn" onclick="runAllRounds()">自动执行全部</button>
+          </div>
+        </div>
+
+        <div class="card" style="padding: 16px 20px;">
+          <div style="font-weight: 700; margin-bottom: 8px;">执行前确认</div>
+          <div style="font-size: 13px; color: var(--muted); line-height: 1.8;">
+            当前原型按一期口径演示：仅在 `名单已锁定` 后开放摇号；每轮只从当前有效志愿池中抽取；已中签住户自动退出后续轮次；结果生成后统一进入公示与查询页。
           </div>
         </div>
 
@@ -337,14 +344,21 @@
     function getEligibleParticipants(rid) {
       const alreadyWonIds = (PrototypeState.data.lotteryResults || []).map(r => r.householdId);
       const households = PrototypeState.data.households;
-      const targetType = ROUND_CONFIG[rid].type;
-      
-      // Filter logic: Not won yet AND (this round's type is their current valid wish)
-      // In this demo, we assume:
-      // A-round: households with wish[0] == A型
-      // B-round: households with (wish[0]==B OR (wish[0]==A AND not won))
-      // For demo simplicity, we'll just filter out won people and take people who haven't won.
-      return households.filter(h => !alreadyWonIds.includes(h.householdId));
+      const roundOrder = ['A', 'B', 'C', 'D'];
+      const currentIndex = roundOrder.indexOf(rid);
+
+      return households.filter(h => {
+        if (alreadyWonIds.includes(h.householdId) || h.status !== '已审核') {
+          return false;
+        }
+
+        const wishes = PrototypeState.getHouseholdWishes(h)
+          .map(type => PrototypeState.getRoundCodeFromType(type))
+          .filter(Boolean);
+        const remainingWishes = wishes.filter(code => roundOrder.indexOf(code) >= currentIndex);
+
+        return remainingWishes[0] === rid;
+      });
     }
 
     function startCurrentRound() {
@@ -385,7 +399,7 @@
         round: rid,
         householdId: p.householdId,
         name: p.name,
-        unit: `${rid === 'A' ? '1' : rid === 'B' ? '2' : '3'}-${(i+1)*101}`,
+        unit: `${rid === 'A' ? '1' : rid === 'B' ? '2' : rid === 'C' ? '3' : '4'}-${(i+1)*101}`,
         time: new Date().toLocaleTimeString()
       }));
 

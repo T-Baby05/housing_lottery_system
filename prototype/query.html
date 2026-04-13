@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>住户查询 - 还房业务平台</title>
+  <title>规则公示与结果查询</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
     body {
@@ -69,13 +69,32 @@
       font-weight: 700;
       color: var(--ink);
     }
+    .notice-card {
+      margin: 20px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+    .notice-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
   <div class="mobile-container">
     <div class="query-header">
-      <h2 style="margin-bottom: 8px;">还房中签结果查询</h2>
+      <h2 style="margin-bottom: 8px;">还房活动公示与查询</h2>
       <p style="font-size: 13px; opacity: 0.8;" id="project-name">锦绣花园还房项目</p>
+    </div>
+
+    <div class="notice-card">
+      <div class="notice-title">活动说明</div>
+      <div id="publish-notice" style="font-size: 13px; color: var(--muted); line-height: 1.7;">
+        当前页面用于统一展示活动规则、活动流程和摇号结果查询入口。
+      </div>
     </div>
 
     <div id="query-section" class="query-form">
@@ -92,6 +111,16 @@
       <div style="margin-top: 40px; text-align: center; font-size: 12px; color: var(--muted);">
         如有疑问，请咨询现场工作人员或拨打：<br>010-88888888
       </div>
+    </div>
+
+    <div class="notice-card">
+      <div class="notice-title">活动规则摘要</div>
+      <div id="rules-panel" style="display: grid; gap: 10px; font-size: 13px; color: var(--muted);"></div>
+    </div>
+
+    <div class="notice-card">
+      <div class="notice-title">活动日流程</div>
+      <div id="flow-panel" style="display: grid; gap: 10px; font-size: 13px; color: var(--muted);"></div>
     </div>
 
     <div id="result-section" style="display: none;">
@@ -173,16 +202,28 @@
       document.getElementById('res-name').textContent = household.name[0] + '*';
       document.getElementById('res-unit').textContent = result.unit;
       document.getElementById('res-round').textContent = result.round + ' 轮';
-      document.getElementById('res-type').textContent = result.unit.startsWith('1') ? '120㎡ (A型)' : '90㎡ (B型)';
+      document.getElementById('res-type').textContent = PrototypeState.getRoundTypeText(result.round);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       const project = PrototypeState.getCurrentProject();
       document.getElementById('project-name').textContent = project.name;
+      document.getElementById('rules-panel').innerHTML = PrototypeState.getPublicRules().map((rule, index) => `
+        <div><strong style="color: var(--ink);">规则 ${index + 1}：</strong>${rule}</div>
+      `).join('');
+      document.getElementById('flow-panel').innerHTML = PrototypeState.getActivityFlow().map(item => `
+        <div>
+          <strong style="color: var(--ink);">${item.time}</strong><br>
+          ${item.title}：${item.detail}
+        </div>
+      `).join('');
 
       if (!PrototypeState.data.publishedState) {
+        document.getElementById('publish-notice').textContent = '摇号结果尚未正式发布。当前可先查看活动规则和活动日流程，结果发布后可在同一页面完成查询。';
         document.getElementById('query-section').style.display = 'none';
         document.getElementById('not-published').style.display = 'block';
+      } else {
+        document.getElementById('publish-notice').textContent = '摇号结果已发布。您可凭参与编号和身份证后四位查询本人结果，并同步查看后续办理说明。';
       }
     });
   </script>
