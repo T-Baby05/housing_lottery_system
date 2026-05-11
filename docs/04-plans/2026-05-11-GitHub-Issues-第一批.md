@@ -3,26 +3,30 @@
 状态：Draft
 负责人：项目维护者
 最后更新：2026-05-11
-关联模板：`docs/templates/GitHub-Issue模板.md`
+关联模板规范：`docs/templates/GitHub-Issue模板.md`
 
 ## 1. 拆分策略
+
+本草稿按三档模板拆分：Issue 1-3 使用标准模板，避免工程初始化和基础映射任务过重；Issue 4-6 使用完整特性模板，因为涉及算法可复现性、数据封存、审计、房源绑定和作废重摇。
 
 第一批 Issues 聚焦 MVP 开发启动所需的后端基础、数据库、核心算法、数据封存、审计和摇号执行能力。暂不一次性创建全部前端和查询端任务，避免在基础模型未落地前过早扩散范围。
 
 第一批建议创建 6 个 GitHub Issues：
 
-| 序号 | 标题 | 优先级 | 标签建议 | 依赖 |
-| --- | --- | --- | --- | --- |
-| 1 | `[后端] 初始化 Spring Boot 后端工程` | P0 | `type:task`, `area:backend`, `priority:P0`, `mvp` | 无 |
-| 2 | `[数据库] 创建 MVP 核心表结构和初始化脚本` | P0 | `type:task`, `area:database`, `priority:P0`, `mvp` | Issue 1 |
-| 3 | `[后端] 创建实体、Mapper 和基础持久化测试` | P0 | `type:task`, `area:backend`, `area:database`, `priority:P0`, `mvp` | Issue 2 |
-| 4 | `[算法] 使用 TDD 实现 LotteryEngine 核心算法` | P0 | `type:feature`, `area:algorithm`, `priority:P0`, `mvp` | Issue 1 |
-| 5 | `[业务] 实现数据快照、锁定和审计日志基础能力` | P0 | `type:feature`, `area:backend`, `area:audit`, `priority:P0`, `mvp` | Issue 3 |
-| 6 | `[业务] 实现四轮摇号执行、房源绑定和作废重摇审计` | P0 | `type:feature`, `area:backend`, `area:algorithm`, `area:audit`, `priority:P0`, `mvp` | Issue 4、Issue 5 |
+| 序号 | 标题 | 模板类型 | 优先级 | 标签建议 | 依赖 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | `[后端] 初始化 Spring Boot 后端工程` | 标准模板 | P0 | `type:task`, `area:backend`, `priority:P0`, `mvp` | 无 |
+| 2 | `[数据库] 创建 MVP 核心表结构和初始化脚本` | 标准模板 | P0 | `type:task`, `area:database`, `priority:P0`, `mvp` | Issue 1 |
+| 3 | `[后端] 创建实体、Mapper 和基础持久化测试` | 标准模板 | P0 | `type:task`, `area:backend`, `area:database`, `priority:P0`, `mvp` | Issue 2 |
+| 4 | `[算法] 使用 TDD 实现 LotteryEngine 核心算法` | 完整特性模板 | P0 | `type:feature`, `area:algorithm`, `priority:P0`, `mvp` | Issue 1 |
+| 5 | `[业务] 实现数据快照、锁定和审计日志基础能力` | 完整特性模板 | P0 | `type:feature`, `area:backend`, `area:audit`, `priority:P0`, `mvp` | Issue 3 |
+| 6 | `[业务] 实现四轮摇号执行、房源绑定和作废重摇审计` | 完整特性模板 | P0 | `type:feature`, `area:backend`, `area:algorithm`, `area:audit`, `priority:P0`, `mvp` | Issue 4、Issue 5 |
 
 ---
 
 ## Issue 1：[后端] 初始化 Spring Boot 后端工程
+
+模板类型：标准模板
 
 ### 背景
 
@@ -123,6 +127,8 @@ mvn test
 ---
 
 ## Issue 2：[数据库] 创建 MVP 核心表结构和初始化脚本
+
+模板类型：标准模板
 
 ### 背景
 
@@ -241,6 +247,8 @@ mvn test
 
 ## Issue 3：[后端] 创建实体、Mapper 和基础持久化测试
 
+模板类型：标准模板
+
 ### 背景
 
 数据库结构确定后，需要建立后端实体、Mapper 和基础持久化测试，作为后续数据锁定、摇号执行、查询和归档功能的访问基础。
@@ -339,6 +347,8 @@ mvn test
 ---
 
 ## Issue 4：[算法] 使用 TDD 实现 LotteryEngine 核心算法
+
+模板类型：完整特性模板
 
 ### 背景
 
@@ -447,6 +457,8 @@ PRNG 选择仍是技术风险点。若后续要求跨 JDK、跨平台或检测�
 
 ## Issue 5：[业务] 实现数据快照、锁定和审计日志基础能力
 
+模板类型：完整特性模板
+
 ### 背景
 
 摇号前必须对住户、房源、意愿和轮次配置生成稳定数据快照，并计算 SHA-256 哈希。锁定后核心数据默认不可修改，关键动作必须写入审计日志。
@@ -554,6 +566,8 @@ mvn test
 ---
 
 ## Issue 6：[业务] 实现四轮摇号执行、房源绑定和作废重摇审计
+
+模板类型：完整特性模板
 
 ### 背景
 
