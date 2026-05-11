@@ -6,7 +6,7 @@
 
 **Architecture:** Spring Boot 3 单体后端 + Vue 3 管理端 + Vue 3 移动查询端。摇号引擎独立抽离为 LotteryEngine 纯函数模块，可独立测试和送检。所有表从第一天带 project_id 为多项目预留。
 
-**Tech Stack:** Spring Boot 3 + MyBatis-Plus + MySQL 8.0 / Vue 3 + Element Plus + Vite
+**Tech Stack:** Spring Boot 3 + MyBatis-Flex + MySQL 8.0 / Vue 3 + Element Plus + Vite
 
 ---
 
@@ -45,7 +45,7 @@ mkdir -p lottery-server/src/test/java/com/housing/lottery/engine
 
     <properties>
         <java.version>17</java.version>
-        <mybatis-plus.version>3.5.6</mybatis-plus.version>
+        <MyBatis-Flex.version>3.5.6</MyBatis-Flex.version>
         <easyexcel.version>3.3.3</easyexcel.version>
     </properties>
 
@@ -60,8 +60,8 @@ mkdir -p lottery-server/src/test/java/com/housing/lottery/engine
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-            <version>${mybatis-plus.version}</version>
+            <artifactId>MyBatis-Flex-spring-boot3-starter</artifactId>
+            <version>${MyBatis-Flex.version}</version>
         </dependency>
         <dependency>
             <groupId>com.mysql</groupId>
@@ -119,7 +119,7 @@ spring:
     password: ${DB_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-mybatis-plus:
+MyBatis-Flex:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -144,7 +144,7 @@ Expected: Spring Boot 启动成功（如无 MySQL 则报连接错误，属正常
 
 ```bash
 git add lottery-server/
-git commit -m "feat: scaffold Spring Boot project with MyBatis-Plus and EasyExcel"
+git commit -m "feat: scaffold Spring Boot project with MyBatis-Flex and EasyExcel"
 ```
 
 ---
@@ -500,7 +500,7 @@ public interface AuditLogMapper extends BaseMapper<AuditLog> {}
 
 Place each interface in its own file under `mapper/`.
 
-- [ ] **Step 9: 添加 MyBatis-Plus 自动填充配置**
+- [ ] **Step 9: 添加 MyBatis-Flex 自动填充配置**
 
 ```java
 package com.housing.lottery.config;
@@ -529,7 +529,7 @@ public class MybatisPlusConfig implements MetaObjectHandler {
 
 ```bash
 git add lottery-server/src/main/java/com/housing/lottery/entity/ lottery-server/src/main/java/com/housing/lottery/mapper/ lottery-server/src/main/java/com/housing/lottery/config/
-git commit -m "feat: add entity classes and MyBatis-Plus mappers"
+git commit -m "feat: add entity classes and MyBatis-Flex mappers"
 ```
 
 ---

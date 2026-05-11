@@ -51,7 +51,7 @@
 | 层 | 技术 | 说明 |
 |----|------|------|
 | 前端 | Vue 3 + Element Plus + Vite | Composition API，Pinia 状态管理，Vue Router 4 |
-| 后端 | Spring Boot 3 + MyBatis-Plus | 经典三层架构：Controller → Service → Mapper |
+| 后端 | Spring Boot 3 + MyBatis-Flex | 经典三层架构：Controller → Service → Mapper |
 | 数据库 | MySQL 8.0 | 所有业务表带 project_id |
 | 缓存 | Redis（可选） | MVP 阶段不引入 |
 

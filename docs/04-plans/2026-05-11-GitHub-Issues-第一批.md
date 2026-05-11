@@ -52,14 +52,14 @@ GitHub Issue：#6
 
 - 创建 `lottery-server` 后端工程。
 - 建立 Spring Boot 3 应用入口、基础配置和测试结构。
-- 为后续数据库、MyBatis-Plus、Excel 导入、接口开发提供基础依赖。
+- 为后续数据库、MyBatis-Flex、Excel 导入、接口开发提供基础依赖。
 
 ### 范围
 
 #### 包含
 
 - 创建 Maven 后端工程结构。
-- 添加 Spring Boot Web、Validation、MyBatis-Plus、MySQL Driver、Lombok、Apache POI 等基础依赖。
+- 添加 Spring Boot Web、Validation、MyBatis-Flex、MySQL Driver、Lombok、Apache POI 等基础依赖。
 - 如引入 Spring Security，先采用开发期放行或最小配置，不实现完整登录流程。
 - 创建应用入口类。
 - 创建 `application.yml`，包含应用名、端口、数据库连接占位配置。
@@ -75,7 +75,7 @@ GitHub Issue：#6
 ### 约束与决策
 
 - 后端采用 Spring Boot 3 单体应用。
-- 数据访问后续采用 MyBatis-Plus。
+- 数据访问后续采用 MyBatis-Flex。
 - 数据库目标为 MySQL 8.0。
 - MVP 暂缓完整权限体系，公开查询接口后续独立放行。
 - 所有提交信息使用 conventional commit 前缀 + 中文描述。
@@ -272,8 +272,8 @@ mvn test
 ### 目标
 
 - 为核心表创建 Java 实体类。
-- 创建 MyBatis-Plus Mapper。
-- 配置 MyBatis-Plus 基础能力。
+- 创建 MyBatis-Flex Mapper。
+- 配置 MyBatis-Flex 基础能力。
 - 编写基础持久化测试，验证实体映射和 CRUD 能力。
 
 ### 范围
@@ -282,7 +282,7 @@ mvn test
 
 - 创建核心实体类：`Project`、`Household`、`HousingUnit`、`Wish`、`LotteryRound`、`LotteryResult`、`AuditLog`。
 - 创建对应 Mapper。
-- 配置 MyBatis-Plus 分页插件。
+- 配置 MyBatis-Flex 分页插件。
 - 添加基础 CRUD 或 Mapper 映射测试。
 - 为状态字段定义枚举或常量，避免散落字符串。
 
@@ -323,7 +323,7 @@ lottery-server/src/test/java/.../mapper/*Test.java
 
 - [ ] 核心 7 张表均有对应实体类。
 - [ ] 核心实体均有对应 Mapper。
-- [ ] MyBatis-Plus 配置可正常加载。
+- [ ] MyBatis-Flex 配置可正常加载。
 - [ ] 基础持久化测试通过。
 - [ ] `LotteryResult.assignedUnitId` 映射正确。
 - [ ] 状态字段使用枚举、常量或集中定义方式管理。
