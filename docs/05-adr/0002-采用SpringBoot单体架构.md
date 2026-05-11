@@ -31,7 +31,7 @@ Controller -> Service -> Mapper -> Database
 - 单体架构开发和部署成本低，适合 MVP。
 - 当前业务边界还在验证阶段，不适合过早拆分服务。
 - 还房摇号活动更强调现场稳定性和可审计性，而不是高并发微服务扩展。
-- Spring Boot + MyBatis-Plus + MySQL 技术栈成熟，适合快速交付管理类系统。
+- Spring Boot + MyBatis-Flex + MySQL 技术栈成熟，适合快速交付管理类系统。
 - 保留模块边界后，未来如果需要仍可拆分。
 
 ## 影响
