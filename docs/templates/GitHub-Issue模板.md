@@ -109,9 +109,46 @@
 | `priority:P0` | 开发启动或核心链路阻塞项 |
 | `priority:P1` | MVP 重要能力 |
 | `mvp` | MVP 范围内 |
+| `status:draft` | 草稿中，尚未审核 |
+| `status:reviewed` | 已审核，可交给 Codex/开发执行 |
+| `status:in-progress` | 开发中 |
+| `status:pr-open` | 已提交 PR，等待 Review 或合并 |
+| `status:blocked` | 阻塞中，需要确认或依赖前置任务 |
+| `status:done` | 已完成并合并/验收 |
 | `needs-confirmation` | 存在待确认事项 |
 
-## 6. 使用原则
+
+## 6. Issue 状态标签
+
+前期采用手动状态标签，不引入复杂自动化流转。每个 Issue 同一时间建议只保留一个 `status:*` 标签。
+
+| 状态标签 | 含义 | 何时使用 |
+| --- | --- | --- |
+| `status:draft` | 草稿中，尚未审核 | Issue 刚创建或内容还需要调整 |
+| `status:reviewed` | 已审核，可执行 | 你已确认范围、验收标准和优先级，可交给 Codex/开发执行 |
+| `status:in-progress` | 开发中 | 已有人或 AI agent 开始实现 |
+| `status:pr-open` | 已提交 PR | 已有 PR，等待 Review、CI 或合并 |
+| `status:blocked` | 阻塞中 | 缺少决策、依赖前置任务或遇到外部问题 |
+| `status:done` | 已完成 | PR 已合并并通过验收，或任务无需 PR 但已完成 |
+
+推荐手动流转：
+
+```text
+status:draft -> status:reviewed -> status:in-progress -> status:pr-open -> status:done
+                         \-> status:blocked -> status:reviewed / status:in-progress
+```
+
+建议规则：
+
+1. 创建 Issue 时默认加 `status:draft`。
+2. 人工审核通过后，把 `status:draft` 替换为 `status:reviewed`。
+3. 交给 Codex 或其他开发执行前，必须是 `status:reviewed`。
+4. 开发开始后，把状态改为 `status:in-progress`。
+5. PR 创建后，把状态改为 `status:pr-open`，并在 PR 描述中写 `Closes #N` 或 `Refs #N`。
+6. PR 合并并验收后，把状态改为 `status:done` 或直接关闭 Issue。
+7. 如果任务缺少决策或依赖，把状态改为 `status:blocked`，并评论说明阻塞原因。
+
+## 7. 使用原则
 
 1. 小任务不要为了形式套完整模板。
 2. 大特性不要为了省事省略约束、验收和测试。

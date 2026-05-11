@@ -11,20 +11,34 @@
 
 第一批 Issues 聚焦 MVP 开发启动所需的后端基础、数据库、核心算法、数据封存、审计和摇号执行能力。暂不一次性创建全部前端和查询端任务，避免在基础模型未落地前过早扩散范围。
 
+当前 GitHub 上第一批 Issue 已创建，初始状态均为 `status:draft`。人工审核通过后，可手动改为 `status:reviewed`，再交给 Codex 或开发执行。
+
 第一批建议创建 6 个 GitHub Issues：
 
-| 序号 | 标题 | 模板类型 | 优先级 | 标签建议 | 依赖 |
-| --- | --- | --- | --- | --- | --- |
-| 1 | `[后端] 初始化 Spring Boot 后端工程` | 标准模板 | P0 | `type:task`, `area:backend`, `priority:P0`, `mvp` | 无 |
-| 2 | `[数据库] 创建 MVP 核心表结构和初始化脚本` | 标准模板 | P0 | `type:task`, `area:database`, `priority:P0`, `mvp` | Issue 1 |
-| 3 | `[后端] 创建实体、Mapper 和基础持久化测试` | 标准模板 | P0 | `type:task`, `area:backend`, `area:database`, `priority:P0`, `mvp` | Issue 2 |
-| 4 | `[算法] 使用 TDD 实现 LotteryEngine 核心算法` | 完整特性模板 | P0 | `type:feature`, `area:algorithm`, `priority:P0`, `mvp` | Issue 1 |
-| 5 | `[业务] 实现数据快照、锁定和审计日志基础能力` | 完整特性模板 | P0 | `type:feature`, `area:backend`, `area:audit`, `priority:P0`, `mvp` | Issue 3 |
-| 6 | `[业务] 实现四轮摇号执行、房源绑定和作废重摇审计` | 完整特性模板 | P0 | `type:feature`, `area:backend`, `area:algorithm`, `area:audit`, `priority:P0`, `mvp` | Issue 4、Issue 5 |
+| 序号 | GitHub Issue | 标题 | 模板类型 | 当前状态 | 优先级 | 标签建议 | 依赖 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | #1 | `[后端] 初始化 Spring Boot 后端工程` | 标准模板 | `status:draft` | P0 | `type:task`, `area:backend`, `priority:P0`, `mvp` | 无 |
+| 2 | #2 | `[数据库] 创建 MVP 核心表结构和初始化脚本` | 标准模板 | `status:draft` | P0 | `type:task`, `area:database`, `priority:P0`, `mvp` | #1 |
+| 3 | #3 | `[后端] 创建实体、Mapper 和基础持久化测试` | 标准模板 | `status:draft` | P0 | `type:task`, `area:backend`, `area:database`, `priority:P0`, `mvp` | #2 |
+| 4 | #4 | `[算法] 使用 TDD 实现 LotteryEngine 核心算法` | 完整特性模板 | `status:draft` | P0 | `type:feature`, `area:algorithm`, `priority:P0`, `mvp` | #1 |
+| 5 | #5 | `[业务] 实现数据快照、锁定和审计日志基础能力` | 完整特性模板 | `status:draft` | P0 | `type:feature`, `area:backend`, `area:audit`, `priority:P0`, `mvp` | #3 |
+| 6 | #6 | `[业务] 实现四轮摇号执行、房源绑定和作废重摇审计` | 完整特性模板 | `status:draft` | P0 | `type:feature`, `area:backend`, `area:algorithm`, `area:audit`, `priority:P0`, `mvp` | #4、#5 |
 
 ---
 
 ## Issue 1：[后端] 初始化 Spring Boot 后端工程
+
+GitHub Issue：#1
+
+GitHub Issue：#2
+
+GitHub Issue：#3
+
+GitHub Issue：#4
+
+GitHub Issue：#5
+
+GitHub Issue：#6
 
 模板类型：标准模板
 
